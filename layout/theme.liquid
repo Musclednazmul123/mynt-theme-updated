@@ -3,15 +3,24 @@
 {%- comment %}</locksmith:25b0>{% endcomment -%}
 
 <!doctype html>
-
 <html class="no-js no-touch supports-no-cookies" lang="{{ shop.locale }}">
 <head>{{ locksmith_initializations }}
 {% render 'pagefly-head' %}
  {%- render 'layouthub_header' -%}
+ 
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="{{ settings.accent_secondary }}">
   <link rel="canonical" href="{{ canonical_url }}">
+
+
+  <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T72L29W');</script>
+<!-- End Google Tag Manager -->
 
   <!-- ======================= Broadcast Theme V2.0.3 ========================= -->
 
@@ -23,7 +32,7 @@
   <link rel="preload" href="{{ 'vendor.js' | asset_url }}" as="script">
   <link rel="preload" href="{{ 'theme.js' | asset_url }}" as="script">
   <link rel="preload" href="{{ 'theme.css' | asset_url }}" as="style">
-  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js" ></script>
 
   {% if settings.favicon %}
     <link rel="shortcut icon" href="{{ settings.favicon | img_url: '32x32' }}" type="image/png" />
@@ -151,6 +160,7 @@
 
   {{ content_for_header }}
 {%- render 'bold-common' -%}
+{%- render 'bold-includes' -%}
   {% if settings.enable_yotpo and settings.yotpo_ID != '' %}
     <script type="text/javascript">(function e(){var e=document.createElement("script");e.type="text/javascript",e.async=true,e.src="//staticw2.yotpo.com/{{ settings.yotpo_ID }}/widget.js";var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t)})();</script>
   {% endif %}
@@ -164,6 +174,11 @@
               
 <body id="{{ page_title | handle }}" class="template-{{ template.name | handle }}{% if customer %} customer-logged-in{% endif %} {{ template.suffix }}" data-animations="{{ settings.animations_enable }}">
 
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T72L29W"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+  
   <a class="in-page-link visually-hidden skip-link is-not-relative" data-skip-content href="#MainContent">{{ 'general.accessibility.skip_to_content' | t }}</a>
 
   <div class="container" data-site-container>
@@ -243,9 +258,6 @@
 
 
       });
-
-
-      
     </script>
 
   <!-- Paste marketing code or third party scripts below this comment line ============== -->
@@ -268,10 +280,20 @@
 .text-row p {
     color: #000000;
 }
-  
 </style>
+{% comment %}{% if template contains 'patients' %}
+   {% include 'pp-543' %}
+{% endif %}
+{% endcomment %}
 {%- render 'layouthub_footer' -%} 
  <!--AZEXO_Footer_Scripts--> {% include 'azexo-footer-scripts' %} <!--End_AZEXO_Footer_Scripts-->{% if content_for_header contains 'product_label' %}{% include 'bss-product-label-js' %}{% include 'bss-label-style-css' %}{% endif %}
-
+{% if page.url contains 'patients'  %}
+  <style>
+  .featured-collection .grid__heading-holder .grid__description {
+  padding: 0;
+  margin: 0;
+}
+</style>
+{% endif  %}
 </body>
 </html>

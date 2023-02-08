@@ -1,0 +1,234 @@
+{{ 'additional-information.css' | asset_url | stylesheet_tag }}
+
+<div class="additional-information" style="background-color: {{ section.settings.bg_color | color_modify : "alpha" , section.settings.bg_opacity }}">
+  <div class="content-wrapper" id="content-wrapper-{{ section.id }}" style="">
+    {% for block in section.blocks %}
+      {% case block.type %}
+        {% when 'image' %}
+          {%- assign default_image = 'blank.svg' | asset_url -%}
+          {%- assign image = block.settings.image | default: default_image -%}
+<!--         style="max-width:{{ block.settings.img_width}}px;height:{{ block.settings.img_height }}px;" -->
+          <div class="margin-btm-5">
+            {% if block.settings.image %}
+              {{ image | image_url: width: block.settings.img_width, height: block.settings.img_height | image_tag }}
+            {% else %}
+              <img src="{{ image }}"/>
+            {% endif %}
+          </div>
+        {% when 'title' %}
+          <h1 class="additional-information-heading-title" style="">
+            {{ block.settings.title }}
+          </h1>
+          <style>
+           @media (min-width: 768px) {
+           #shopify-section-{{section.id}} .additional-information-heading-title {
+                max-width:{{ block.settings.title_width }}px;
+                font-size:{{ block.settings.title_font }}px;
+                color:{{ block.settings.title_color }};
+                padding-top:{{ block.settings.title_padding_t  }}px;
+                padding-bottom:{{ block.settings.title_padding_b  }}px;
+               }
+           }
+           @media (max-width: 768px) {
+           #shopify-section-{{section.id}} .additional-information-heading-title {
+                max-width:{{ block.settings.title_width_mobile }}px;
+                font-size:{{ block.settings.title_font_mobile }}px;
+                color:{{ block.settings.title_color_mobile }};
+                padding-top:{{ block.settings.title_padding_t_mobile  }}px;
+                padding-bottom:{{ block.settings.title_padding_b_mobile  }}px;
+               }
+           }
+          </style>
+
+      {% endcase %}
+    {% endfor %}
+  </div>
+</div>
+<style>
+  @media (min-width: 540px) {
+     #content-wrapper-{{ section.id }} {
+          padding-top:{{ section.settings.content_padding_t  }}px;
+          padding-bottom:{{ section.settings.content_padding_b  }}px;
+          gap:{{ section.settings.content_gap }}px;   
+     } 
+    .Mayant-Platform-Benefits-05-mobile {
+      display: none;
+    }
+  }
+  @media (max-width: 540px) {
+     #content-wrapper-{{ section.id }} {
+          padding-top:{{ section.settings.content_padding_t_mobile  }}px;
+          padding-bottom:{{ section.settings.content_padding_b_mobile  }}px;
+          gap:{{ section.settings.content_gap_mobile }}px;   
+     }
+    .Mayant-Platform-Benefits-05-mobile {
+      display: block;
+    }
+    .margin-btm-5 {
+      margin-bottom: -5px;
+    }
+  }
+</style>
+{% schema %}
+{
+  "name": "Mayant Platform Benefits",
+  "class": "Mayant-Platform-Benefits-05-mobile",
+  "settings": [{
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "bg_opacity",
+      "label": "Background Opacity",
+      "min": 0,
+      "max": 1,
+      "step": 0.1,
+      "default": 1
+    },
+    {
+      "type": "number",
+      "id": "content_padding_t",
+      "label": "Padding Top",
+      "default": 0
+    },
+    {
+      "type": "number",
+      "id": "content_padding_b",
+      "label": "Padding Bottom",
+      "default": 0
+    },
+    {
+      "type": "number",
+      "id": "content_gap_mobile",
+      "label": "Content Gap",
+      "info": "Increase Gap between Content Items",
+      "default": 5
+    },
+    {
+      "type": "number",
+      "id": "content_padding_t_mobile",
+      "label": "Padding Top Mobile",
+      "default": 0
+    },
+    {
+      "type": "number",
+      "id": "content_padding_b_mobile",
+      "label": "Padding Bottom Mobile",
+      "default": 0
+    },
+    {
+      "type": "number",
+      "id": "content_gap",
+      "label": "Content Gap Mobile",
+      "info": "Increase Gap between Content Items",
+      "default": 5
+    }
+  ],
+  "blocks": [{
+      "type": "image",
+      "name": "Image Block",
+      "settings": [{
+          "type": "image_picker",
+          "id": "image",
+          "label": "Add Image"
+        },
+        {
+          "type": "number",
+          "id": "img_width",
+          "label": "Image Width",
+          "default": 400
+        },
+        {
+          "type": "number",
+          "id": "img_height",
+          "label": "Image height",
+          "default": 400
+        }
+      ]
+    },
+    {
+      "type": "title",
+      "name": "Title Block",
+      "settings": [{
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Title"
+        },
+        {
+          "type": "range",
+          "id": "title_font",
+          "label": "Font Size",
+          "min": 0,
+          "max": 40,
+          "step": 1,
+          "unit": "px",
+          "default": 34
+        },
+        {
+          "type": "color",
+          "id": "title_color",
+          "label": "Color",
+          "default": "#000000"
+        },
+        {
+          "type": "number",
+          "id": "title_padding_t",
+          "label": "Padding Top",
+          "default": 0
+        },
+        {
+          "type": "number",
+          "id": "title_padding_b",
+          "label": "Padding Bottom",
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "title_width_mobile",
+          "min": 350,
+          "max": 400,
+          "step": 1,
+          "default": 350,
+          "label": "Title Width Mobile"
+        },
+        {
+          "type": "range",
+          "id": "title_font_mobile",
+          "label": "Font Size Mobile",
+          "min": 0,
+          "max": 40,
+          "step": 1,
+          "unit": "px",
+          "default": 34
+        },
+        {
+          "type": "color",
+          "id": "title_color_mobile",
+          "label": "Color Mobile",
+          "default": "#000000"
+        },
+        {
+          "type": "number",
+          "id": "title_padding_t_mobile",
+          "label": "Padding Top Mobile",
+          "default": 0
+        },
+        {
+          "type": "number",
+          "id": "title_padding_b_mobile",
+          "label": "Padding Bottom Mobile",
+          "default": 0
+        }
+
+      ]
+    }
+  ],
+  "presets": [{
+    "name": "Mayant Platform Benefits 05"
+  }]
+}
+{% endschema %}

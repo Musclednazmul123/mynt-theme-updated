@@ -15,13 +15,21 @@
 {%- assign image = img_object | default: default_image -%}
 {%- assign aspect_ratio = image.aspect_ratio | default: 2.63 -%}
 
-<div class="image__hero__frame fade-in-image-zoom {{ height }}"
+<!-- <style>
+@media screen and (max-width: 768px) {
+  .m{{ section-id }}{
+    height: {{ image-height-mobile }}px !important;}
+}
+</style> -->
+
+
+<div class="image__hero__frame m{{ section-id }} fade-in-image-zoom {{ height }}"
   data-overflow-background
   {% if height == 'image-height' %}
     style="padding-top: {{ 1 | divided_by: aspect_ratio | times: 100 }}%;
            background-image: url('{{ image | img_url: '1x1' }}');"
   {% else %}
-    style="{% if img_height>0 %} height: {{ img_height }}%; {% endif %}"
+    style="{% if img_height>0 %} height: {{ img_height }}%; {% endif %} "
   {% endif %}
   {% if settings.parallax_enable %}data-parallax-wrapper{% endif %}>
 
@@ -32,16 +40,16 @@
         data-aspect-ratio="{{ aspect_ratio }}"
         data-parallax-img
     {% endif %}>
-      <div class="background-size-cover lazyload"
+      <div class="background-size-cover lazyload "
         data-bgset="{% render 'bgset', image: image %}"
-        style="background-position: {{ bg_position | replace: '-', ' ' }};  background-size:{{ bg_size }};"
+        style="background-color: {{ bg_color }}; background-position: {{ bg_position | replace: '-', ' ' }};  background-repeat: no-repeat;  background-size:{{ bg_size }};"
         role="img"
         aria-label="{{ image.alt | strip_html | escape }}"></div>
     </div>
     
     <noscript>
-      <div class="background-size-cover"
-        style="background-image:url('{% if img_object != blank %}{{ image | img_url: '720x' }}{% else %}{{ image }}{% endif %}'); background-position: {{ bg_position | replace: '-', ' ' }};  background-repeat: no-repeat;"
+      <div class=""
+        style=" background-image:url('{% if img_object != blank %}{{ image | img_url: '720x' }}{% else %}{{ image }}{% endif %}'); background-position: {{ bg_position | replace: '-', ' ' }};  background-repeat: no-repeat;"
         role="img"
         aria-label="{{ image.alt | strip_html | escape }}"></div>
     </noscript>

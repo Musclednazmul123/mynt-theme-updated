@@ -1,17 +1,22 @@
 
-
 <div id='custom-lock-feature' style='padding-top: 40px;display: none; position: fixed; z-index: 999999999999; width: 100%; top: 90px; background: white; height: 100%;'>
 <!-- form will apper here   -->
-  <div class='customer-information-form' style='display: none;' id='customer-information-form'>
-{% render 'passcode-forms' %}
-<!--     <div class="klaviyo-form-WuhUEZ"></div> -->
-<!--     <div class="klaviyo-form-WuhUEZ"></div> -->
-<!--     <button class='kl-fm-submit'  onclick='submitkl(this)'>Submit</button> -->
+  <div style='display: none;' class='customer-information-form' id='customer-information-form'>
+    <p><input placeholder='Name of your General Practitioner:' style='border: 1px solid gray;'  required  class="locksmith-passcode "></p>
+    <p><input placeholder='Street Address' style='border: 1px solid gray;'  required  class="locksmith-passcode "></p>
+    <p><input placeholder='City'  style='border: 1px solid gray;'  required  class="locksmith-passcode "></p>
+    <p><input placeholder='Province'  style='border: 1px solid gray;'  required  class="locksmith-passcode "></p>
+    <p><input placeholder='Country'  style='border: 1px solid gray;'  required  class="locksmith-passcode "></p>
+    <p><input placeholder='Postal Code'  style='border: 1px solid gray;'  required  class="locksmith-passcode "></p>
+    <p><input placeholder='Telephone number'  style='border: 1px solid gray;'  required  class="locksmith-passcode "></p>
+    <div style='margin-top: 14px; margin-bottom: 14px;display: flex; justify-content: flex-end; flex-direction: row; align-items: flex-start; gap: 6px;'>
+      <input style='margin: 0px; padding: 0px; margin-top: 1px;' type="checkbox"  name="test" ><p class="ctm-span-text" style='font-size: 11px; margin: 0px; padding: 0px;'>I certify that I have a diagnosis from a certified Canadian health professional who has diagnosed me with a cardiovascular disease</p>
+    </div>
+    <button id='submit-lock-code-info' class="passcode_function button button-primary btn btn-primary action-button action_button">CONTINUE</button>
   </div>
 <!--  end form here  -->
 <div id="locksmith-content">
 <div class="locksmith-passcode-container container page-width">
-  
   <form id="locksmith_passcode_form">
     <p style='font-size: 14px;'>Enter the passcode to continue: </p>
     <p><input style='border: 1px solid gray;'  required id="locksmith_passcode" class="locksmith-passcode "></p>
@@ -19,75 +24,32 @@
 <p style='font-size: 14px; margin-top: 14px;'>If you do not have a code, please <a href="/pages/connect-with-myant">contact us </a> so you can join our program:</p>
 
 <div style='margin-top: 14px; margin-bottom: 14px;display: flex; justify-content: flex-end; flex-direction: row; align-items: flex-start; gap: 6px;'>
-<input style='margin: 0px; padding: 0px; margin-top: 1px;' required type="checkbox" id="locksmith_passcode_form-check" name="test" ><p class="ctm-span-text" style='font-size: 11px; margin: 0px; padding: 0px;'>Contraindication:  If you have a pacemaker or ICD (Implantable Cardioverter Defibrillator) this device is not recommended. By clicking this box you acknowledge that you do not use either of these devices.</p>
+<input style='margin: 0px; padding: 0px; margin-top: 1px;'  type="checkbox" id="locksmith_passcode_form-check" name="test" ><p class="ctm-span-text" style='font-size: 11px; margin: 0px; padding: 0px;'>Contraindication:  If you have a pacemaker or ICD (Implantable Cardioverter Defibrillator) this device is not recommended. By clicking this box you acknowledge that you do not use either of these devices.</p>
 </div>
 
     <p>
-<button  class="passcode_function button button-primary btn btn-primary action-button action_button">CONTINUE</button>
+<button id='submit-lock-code' class="passcode_function button button-primary btn btn-primary action-button action_button">CONTINUE</button>
 </p>
   </form>
 </div>
-<!--   // klavio form submit hidden field -->
-  
 </div>
 
-  <script>
-    // needsclick klaviyo-form klaviyo-form-version-cid_1 kl-private-reset-css-Xuajs1
-
-    function submitkl(elem){
-      document.querySelector('.go338491780').click()
-      // elem.style.display = 'none'
-
-      setTimeout(() => {
-        addpasscode()
-      }, 300)
-      
-    }
-    // lock functionality
-    
-    document.getElementById("locksmith_passcode_form").onsubmit = (e)=> {
-      e.preventDefault()
-      
+<!--   <script>
+    document.getElementById('locksmith_passcode').addEventListener("input", function () {
       const code = document.getElementById('locksmith_passcode').value
       const valid = ['FBSKIIN', 'IGSKIIN', 'INSKIIN']
-        if(valid.includes(code)){
-          document.getElementById('customer-information-form').style.display = "flex" 
-        }else{
-          if(document.getElementById('locksmith_passcode_form-check').checked){
-          addpasscode()
-        } else{
-          alert('Please read and accept the Contraindication to continue')
-        }
+      if(valid.includes(code)){
+        document.getElementById('customer-information-form').style.display = "flex" 
+      }else{
         document.getElementById('customer-information-form').style.display = "none" 
       }
-    };
-    
+      
+    });
   </script>
-
+ -->
 
 <style type="text/css">
 
-  .go338491780{
-    display: none;
-  }
-  .kl-fm-submit{
-    width: 556px !important;
-    margin: auto;
-    background: rgb(48, 59, 67);
-    color: white;
-    margin-bottom: 40px;
-  }
-  .fields_container{
-    display: flex;
-    gap: 20px;
-    width: 100%;
-  }
-  .fields_container div{
-    width: 100%;
-  }
-  .customer-information-form > div{
-    margin-top: 100px;
-  }
   .customer-information-form{
     justify-content: center;
     display: flex;
@@ -97,9 +59,7 @@
     left: 0;
     right: 0;
     margin: 0px auto;
-    width: 800px;
-/*     height: 600px; */
-    overflow: auto;
+    width: 600px;
     background: white;
     z-index: 999999999;
   }

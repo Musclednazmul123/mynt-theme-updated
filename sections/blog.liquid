@@ -106,7 +106,7 @@
       </ul>
     {%- endif -%}
 
-    {% paginate blog.articles by article_limit %}
+     {% paginate blog.articles by article_limit %}
       <div class="blog-listing-outer">
         <div class="blog-listing grid grid--uniform" id="BlogLoop">
           {% for article in blog.articles %}
@@ -202,6 +202,11 @@
         "content": "Layout"
       },
       {
+        "type":"article",
+        "id":"article-blog-news-events",
+        "label":"Select blog posts"
+      },
+      {
         "type": "checkbox",
         "id": "show_tag_nav",
         "label": "Show tag navigation",
@@ -290,6 +295,12 @@
             "info": "Optional: replace the article featured image."
           }
         ]
+      }
+    ],
+    "presets":[
+      {
+        "name":"Blog pages",
+        "category": "Blogs"
       }
     ]
   }
