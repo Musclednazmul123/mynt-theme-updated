@@ -1,0 +1,60 @@
+<style>
+  #globo-formbuilder-100457 .footer .submit{
+    display: none;
+  }
+</style>
+
+<div class="globo-formbuilder" style='max-height: 500px; overflow: auto;' data-id="MTAwNDU3"></div>
+
+
+<script>
+  let form = undefined
+
+  var myInterval=setInterval(function(){ 
+    form = document.getElementById('globo-formbuilder-100457') 
+
+    if (form){
+      form=form.getElementsByClassName('footer')[0]
+      
+      form.innerHTML='<button onclick="submitform(event)">Submit</button>'+`<button class="action submit classic-button"><span class="spinner"></span>Submit</button>`
+    }
+                       
+    }, 200);
+
+  function submitform(event){
+    clearInterval(myInterval);
+    event.preventDefault()
+    const form_input = document.getElementById('globo-formbuilder-100457').getElementsByClassName('flat_rounded-input')
+    
+    if(form_input){
+      for (let i = 0; i < 5; i++) {
+        if(form_input[i].hasAttribute('presence')){
+          if(form_input[i].value==''){
+            form_input[i].style.border = '1px solid rgba(255, 0, 0, 0.5 )'
+            alert(`Required fields cannot be blank`)
+            return
+          }
+        }
+      }
+      const checkbox = document.querySelector('.checkbox-input')
+      if(checkbox.checked == false){
+        alert('Accept our terms and condition')
+        return
+      }
+        const submitformbutton=document.getElementById('globo-formbuilder-100457').getElementsByClassName('submit')[0]
+        if(submitformbutton){
+          event.target.style.display = 'none'
+          submitformbutton.style.display = 'block'
+          submitformbutton.click()
+    
+          setTimeout(()=>{
+            addpasscode()
+          }, 1000)
+        } else{
+          alert('Something went wrong')
+        }
+    }
+
+  }
+</script>
+

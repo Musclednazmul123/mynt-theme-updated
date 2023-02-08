@@ -19,9 +19,10 @@
 {%- if product.selling_plan_groups.size > 0 -%}
   {% assign buybutton_setting = false -%}
 {%- endif -%}
+
 {% form 'product', product, class: 'product-form', data-product-form: '' %}
   {% comment %} The input with name="id" submits to cart {% endcomment %} 
-  <input type="hidden" name="id" value="{{ current_variant.id }}">
+  <input id='current-variant-id' type="hidden" name="id" value="{{ current_variant.id }}">
 
   {% comment %} Shop pay split payment terms {% endcomment %} 
   <div class="shop-pay-terms">
@@ -268,7 +269,7 @@
         </div>
       {% endif %}
 {% else %}
-    <button
+   <button
           id="add-to-cart-button"
           type="submit"
           name="add"
@@ -296,7 +297,7 @@
             {%- endif -%}
           </span>
         </button>
-   <span id='custom-button-lock' style="margin-bottom: 0px;" class=" btn button btn ">Add to cart</span>
+   <span id='custom-button-lock' style="margin-bottom: 0px;" class=" btn button ">Add to cart</span>
    
 {% endif %}
 
@@ -310,6 +311,7 @@
     <div data-cart-errors-container class="product__form__errors"></div>
 
 
+    {%- render 'custom-product-lock' -%}
 
     <script data-cart-popover-template type="text/x-template">
       <a href="#" class="close">{% render 'icon-close-thin' %}</a>
@@ -346,8 +348,5 @@
   </div>
 
 {% endform %}
-
-
-{%- render 'custom-product-lock' -%}
 
 

@@ -1,0 +1,30 @@
+{{ 'ctm-how-can-we-help.css' | asset_url | stylesheet_tag }}
+<div class="top-overlay">
+    <div class="width">
+        <div class="content">
+            <h1>How can we help?</h1>
+            <form class="search" action="/article">
+              <input class="search" type="text" placeholder="Search for answers" name="q" value="{{ search.terms | escape }}"  />
+              <input type="submit" value="Search" style="visibility: hidden;"/>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="breadcrumbs">
+  <div class="width">
+     {% render 'breadcrumbs' %}
+  </div>
+</div>
+
+{% schema %}
+  {
+    "name": "Section name",
+    "settings": []
+  }
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

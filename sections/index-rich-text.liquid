@@ -1,7 +1,5 @@
 <!-- /sections/index-rich-text.liquid -->
 
-
-
 <section class="index-rte {{ section.settings.text_color }} {{ section.settings.height }}" style="background-color: {{ section.settings.bg_color }};" data-section-id="{{ section.id }}" data-section-type="rich-text">
   <div class="{{ section.settings.width }}">
     <div class="text__standard {{ section.settings.align_text }}">
@@ -32,9 +30,7 @@
         <a href="{{ section.settings.button_url }}" 
           class="standard__cta {{ section.settings.button_style }} {{ section.settings.button_color }}"
           data-aos="hero"
-          style='font-size:{{ section.settings.button-text-size }}px;'
           data-aos-order="4">
-          
           {{ section.settings.button_text }}
         </a>
       {% endif %}
@@ -109,12 +105,6 @@
       "label":"Link"
     },
     {
-      "type":"number",
-      "id":"button-text-size",
-      "label":"Button text size",
-      "default":16
-    },
-    {
       "type": "select",
       "id": "button_color",
       "label": "Color",
@@ -151,7 +141,6 @@
       "label": "Height",
       "default": "margin--medium",
       "options": [
-        
         {"value": "margin--small", "label": "Small"},
         {"value": "margin--medium", "label": "Medium"},
         {"value": "margin--large", "label": "Large"}

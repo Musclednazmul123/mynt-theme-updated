@@ -16,18 +16,11 @@
 {% if section.settings.logo != blank %}
 <style>
   .hero__logo { max-width: {{ section.settings.logo_max_width | append: 'px' }}; }
-   @media (max-width: 768px){
-  .index-video, #shopify-section-166448282296e4b0a7{
-    height: 200px !important;
-  }
-}
 </style>
 {% endif %}
 
-
 <section class="index-video video-parent-section {{ height }} js-overflow-container" data-section-id="{{ section.id }}" data-section-type="featured-video">
   <div class="video-wrapper {{ text_color }}">
-   
     <div class="hero__content__wrapper align--middle-center hero__content--transparent">
       <div class="hero__content js-overflow-content">
         {%- if section.settings.logo != blank -%}

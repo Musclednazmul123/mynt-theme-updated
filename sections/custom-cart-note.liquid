@@ -1,0 +1,23 @@
+<script>
+  function addcartnotes(){
+        if(sessionStorage.getItem('passcode')){
+             alert(sessionStorage.getItem('passcode'))
+          let notearea = document.getElementById('note')
+          console.log(notearea)
+          } else {return}
+      }
+
+      addcartnotes()
+</script>
+
+{% schema %}
+  {
+    "name": "Cart Note",
+    "settings": [],
+    "presets":[
+      {
+        "name":"Cart Note"
+      }
+    ]
+  }
+{% endschema %}
