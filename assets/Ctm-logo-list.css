@@ -155,17 +155,16 @@ padding-inline: 0;
 }
 .ctm-logo-list-description {
     font-size: 14px;
-    width: 200px;
+    width: 260px !important;
     display: inline-block;
     margin-top: 10px !important;
 }
 .ctm-logo-card-title {
-  font-size: 16px;
   font-weight: 700;
-      font-weight: 700;
-    max-width: 200px;
-    text-align: center;
-    margin-inline: auto;
+  max-width: 300px;
+  text-align: center;
+  margin-inline: auto;
+  font-size: 20px;
 }
 
 .ctm-divider-wrapper {
@@ -179,8 +178,13 @@ padding-inline: 0;
 .ctm-style-logo-list-heading {
   font-size: 26px;
   font-weight: 700;
+  margin-b0ttom: 50px;
 }
-
+.subheading-logolist {
+  margin-bottom: 50px;
+  opacity: 0.7;
+  font-size: 18px;
+}
 
 .ctm-divider-style-wrapper p {
     text-align: left;
@@ -190,9 +194,10 @@ padding-inline: 0;
     margin-top: 20px;
 }
 .ctm-divider-style-wrapper {
-    bottom: 20px;
-    order: 2;
-    position: relative;
+  bottom: -70px;
+  order: 2;
+  position: relative;
+  padding-bottom: 130px;
 }
 .ctm-footer-note-border {
   width: 192px;
@@ -204,21 +209,51 @@ padding-inline: 0;
     left: 60px;
 }
 
-@media (min-width: 1200px) {
-.ctm-rich-text-wrapper {
-    margin-top: -50px !important;
-    padding-top: 50px !important;
-}  
-}
-.ctm-rich-text-wrapper {
-    padding-top: 50px !important;
-}
+
+
 @media  (max-width: 680px){
 
  .ctm-divider-style-wrapper .ctm-footer-note-border {
     left: 0px;
   }
 .ctm-divider-style-wrapper p {
-  left: 10px;
+  position: relative !important;
+  left: 0px!important;
+  margin-top: 18px !important;
+}
+.ctm-divider-style-wrapper {
+  bottom: 0px !important;
 }
 }
+@media (max-width:660px) {
+  .ctm-logos__card {
+    margin-block: 30px;
+  }
+  .ctm-logos__card, .ctm-logos__slide {
+    height: usnet !important;
+  }
+  .ctm-divider-style-wrapper {
+  order: 2;
+  position: relative;
+  padding-bottom: 0;
+  margin-top: 50px;
+}
+.ctm-divider-style-wrapper {
+  bottom: -10px !important;
+}
+}
+.ctm-logos__card {
+/*   display: flex; */
+  display: block;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  align-items: center;
+}
+@media (max-width: 540px ) {
+.ctm-logos__card ,.ctm-logos__slide {
+  width: 330px !important;
+  height: unset !important;
+}
+}
+

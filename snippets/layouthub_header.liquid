@@ -5,10 +5,10 @@ This snippet auto generate by LayoutHub. Please DO NOT modify it
 <!--LayoutHub-Embed-->
 {%- assign tmpl = template | split: '.' | first  -%}
 {%- if tmpl contains 'page' and  page != blank  and page.metafields.layouthub and page.metafields.layouthub.featured_image  -%}
-	{%- comment %}<locksmith:6865>{% endcomment -%}
+	{%- comment %}<locksmith:f2b0>{% endcomment -%}
 	  {%- capture var %}{% render 'locksmith-variables', variable: 'transparent', hiding_scope: 'resource' %}{% endcapture %}{% if var == 'true' %}<meta property="og:image" content="{{page.metafields.layouthub.featured_image}}" />{% endif -%}
 	  {%- comment %}original: <meta property="og:image" content="{{page.metafields.layouthub.featured_image}}" />{%- endcomment %}
-	{%- comment %}</locksmith:6865>{% endcomment -%}
+	{%- comment %}</locksmith:f2b0>{% endcomment -%}
 	<meta property="og:image:alt" content="{{page_title}}" />
 {%- endif -%}
 {%- unless request.path contains 'apps/layouthub' -%}

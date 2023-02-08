@@ -1,21 +1,17 @@
 
 
-
-
   <script>
 
-
-if(document.getElementById('Insurance-Receipt')){
+    if(document.getElementById('Insurance-Receipt')){
       
-  document.getElementById('Insurance-Receipt').addEventListener("click", function(e){
-    if(e.target.checked){
-      localStorage.setItem('Insurance-Receipt', 'Insurance Receipt')
-    } else {
-      localStorage.setItem('Insurance-Receipt', 'null')
+    document.getElementById('Insurance-Receipt').addEventListener("click", function(e){
+      if(e.target.checked){
+        localStorage.setItem('Insurance-Receipt', 'Insurance Receipt')
+      } else {
+        localStorage.setItem('Insurance-Receipt', 'null')
+      }
+    })
     }
-    addpasscode()
-  })
-}
     
   async function addpasscode(){
     
@@ -28,17 +24,15 @@ if(document.getElementById('Insurance-Receipt')){
       if (notearea){ 
         if(localStorage.getItem('Insurance-Receipt')=='Insurance Receipt'){
           notearea.value = localStorage.getItem('passcode')+ " " + 'Insurance Receipt' 
-          
         } else{
           notearea.value = localStorage.getItem('passcode')
         }
         notearea.parentNode.parentNode.style.display = "none"
-
-        
       }
       if(addbtn){
         
         addbtn.click()
+        console.log('addbtn')
       }
     } else{
         localStorage.clear()
@@ -55,7 +49,7 @@ if(document.getElementById('Insurance-Receipt')){
         localStorage.setItem('passcode', pass)
         
           if(addbtn){
-            
+            console.log('addbtn')
             addbtn.click()
           }
 
@@ -71,6 +65,7 @@ if(document.getElementById('Insurance-Receipt')){
 
   }
 
+    let formopen = false
 
     function passcodeModal(){
       if(localStorage.getItem('passcode')){
@@ -91,14 +86,37 @@ if(document.getElementById('Insurance-Receipt')){
     }
 
     if (document.getElementById("submit-lock-code")){
-      
+    
     document.getElementById("submit-lock-code").addEventListener("click", function(event){
-  event.preventDefault()
-    addpasscode()
+    event.preventDefault()
+      // alert('Please read and accept the contraindications above to continue')
+      
+      if(document.getElementById('locksmith_passcode_form-check').checked){
+        if (!formopen){
+          const code = document.getElementById('locksmith_passcode').value
+          const valid = ['FBSKIIN', 'IGSKIIN', 'INSKIIN']
+          if(valid.includes(code)){
+            document.getElementById('customer-information-form').style.display = "flex" 
+          }else{
+            addpasscode()
+            document.getElementById('customer-information-form').style.display = "none" 
+          }
+          formopen = false
+        } else{
+          formopen = true
+          addpasscode()
+        }
+        
+      } else{
+        alert('Please read and accept the Contraindication to continue')
+      }
+    
 });
     }
-  // addpasscode()
-  // document.getElementById('note').onchange = addpasscode()
+
+  document.getElementById('submit-lock-code-info').addEventListener("click", function(){
+    
+  })
 
   </script>
 

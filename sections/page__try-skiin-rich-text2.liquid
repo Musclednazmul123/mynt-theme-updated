@@ -1,6 +1,13 @@
 <!-- /sections/index-rich-text.liquid -->
 
-<section class="index-rte {{ section.settings.text_color }} {{ section.settings.height }}" style="background-color: {{ section.settings.bg_color }};" data-section-id="{{ section.id }}" data-section-type="rich-text">
+<style>
+  .margin--exsmall{
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+</style>
+
+<section class="index-rte {{ section.settings.text_color }} {{ section.settings.height }} {% if page.url contains 'patients' %} ctm-rich-text-wrapper {% endif %}" style="background-color: {{ section.settings.bg_color }}; padding-top:{{ section.settings.margin_t }}px; padding-bottom:{{ section.settings.margin_b }}px;" data-section-id="{{ section.id }}" data-section-type="rich-text">
   <div class="{{ section.settings.width }}">
     <div class="text__standard {{ section.settings.align_text }}">
       {% if section.settings.subheading != blank %}
@@ -30,6 +37,7 @@
         <a href="{{ section.settings.button_url }}" 
           class="standard__cta {{ section.settings.button_style }} {{ section.settings.button_color }}"
           data-aos="hero"
+          style='font-size:{{ section.settings.button-text-size }}px;'
           data-aos-order="4">
           {{ section.settings.button_text }}
         </a>
@@ -49,13 +57,26 @@
       "default": "Introducing"
     },
     {
+      "type":"number",
+      "id":"margin_t",
+      "label":"padding Top",
+      "default":0
+    }
+    ,
+    {
+      "type":"number",
+      "id":"margin_b",
+      "label":"padding bottom",
+      "default":0
+    },
+    {
       "type": "text",
       "id": "title",
       "label": "Heading",
       "default": "Rich text"
     },
     {
-      "type": "richtext",
+      "type": "liquid",
       "id": "text",
       "label": "Text",
       "default": "<p>Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.</p>"
@@ -105,6 +126,12 @@
       "label":"Link"
     },
     {
+      "type":"number",
+      "id":"button-text-size",
+      "label":"Button text size",
+      "default":16
+    },
+    {
       "type": "select",
       "id": "button_color",
       "label": "Color",
@@ -141,6 +168,7 @@
       "label": "Height",
       "default": "margin--medium",
       "options": [
+        {"value": "margin--exsmall", "label": "Extra Small"},
         {"value": "margin--small", "label": "Small"},
         {"value": "margin--medium", "label": "Medium"},
         {"value": "margin--large", "label": "Large"}

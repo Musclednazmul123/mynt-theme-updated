@@ -25,7 +25,8 @@
 
         <p>{{ 'cart.general.empty' | t }}</p>
 
-        <a href="{{- routes.all_products_collection_url -}}" class="btn btn--large btn--outline">{{ 'cart.general.continue_shopping' | t }}</a>
+<!--         {{- routes.all_products_collection_url -}} -->
+        <a href="/" class="btn btn--large btn--outline">{{ 'cart.general.continue_shopping' | t }}</a>
       </div>
 
       {{ form.errors | default_errors }}
@@ -34,7 +35,8 @@
         <div class="cart__content">
           <h1 class="cart__title">{{ 'cart.general.title' | t }}</h1>
 
-          <a class="btn btn--outline" href="{{- routes.all_products_collection_url -}}">{{ 'cart.general.continue_shopping' | t }}</a>
+<!--           {{- routes.all_products_collection_url -}} -->
+          <a class="btn btn--outline" href="/">{{ 'cart.general.continue_shopping' | t }}</a>
 
           <div class="cart__errors" data-cart-errors>
             <h5 class="cart__errors__heading">{{- 'cart.general.limit_message' | t -}}</h5>
@@ -242,14 +244,13 @@
               {{- 'cart.general.update' | t -}}
             </button>
             
-            <span id='checkout-button-when-click' class="btn btn--full btn--large cart__checkout">
+            <button type="submit" name="checkout" class="btn btn--full btn--large cart__checkout">
               {{- 'cart.general.checkout' | t -}}
-            </span>
+            </button>
 
             <em>{{- 'cart.general.subtotal_note' | t -}}</em>
           </div>
-<!--           {% render 'Insurance-Receipt' %}  -->
-                    <input type='checkbox' id='Insurance-Receipt' /> Please send me the receipt for insurance purposes.
+          {% render 'Insurance-Receipt' %} 
           {%- if settings.enable_additional_buttons and additional_checkout_buttons -%}
             <span class="cart__or">&mdash; {{ 'cart.general.or' | t }} &mdash;</span>
 
@@ -263,20 +264,8 @@
   </div>
 </div>
 
-
 {%- render 'custom-product-lock' -%}
 
 <script>
   addpasscode()
-
-  document.getElementById('checkout-button-when-click').addEventListener("click", function(event){
-  event.preventDefault()
-    if(localStorage.getItem('passcode')){
-      const discountcode = localStorage.getItem('passcode')
-      window.location.replace(`/discount/${discountcode}?redirect=/checkout`);
-      console.log(discountcode)
-    } else{
-      return
-    }
-});
 </script>
