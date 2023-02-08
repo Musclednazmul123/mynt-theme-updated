@@ -1,0 +1,38 @@
+
+<div style="padding-top:{{ section.settings.paddingY }}px; padding-bottom:{{ section.settings.paddingY }}px; padding-left:{{ section.settings.paddingX }}px; padding-right:{{ section.settings.paddingX }}px;"> 
+  <hr style="width: {{ section.settings.width }}%; border-radious: 100%; border: none; height: {{ section.settings.height }}px; background: black; " />
+</div>
+  
+
+{% schema %}
+  {
+    "name": "Section Devider",
+    "settings": [
+      {
+        "type":"number",
+        "id":"height",
+        "label":"Height"
+      },
+      {
+        "type":"number",
+        "id":"paddingX",
+        "label":"Padding X"
+      },
+      {
+        "type":"number",
+        "id":"paddingY",
+        "label":"Padding Y"
+      },
+      {
+        "type":"number",
+        "id":"width",
+        "label":"Width %"
+      }
+    ],
+    "presets":[
+      {
+        "name":"Section Devider"
+      }
+    ]
+  }
+{% endschema %}

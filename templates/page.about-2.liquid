@@ -1,0 +1,53 @@
+<!-- /templates/page.about.liquid -->
+
+{% section 'page-about-5' %}
+{% section 'page__about-2-rich-text' %}
+
+{%- if page.content != '' -%}
+  <section class="brick__section brick--1">
+    <div class="brick__block">
+      <div class="brick__block__text text-dark">
+        <div class="brick__block__text__inner">
+          <div class="text__standard text-left">
+            <div class="standard__rte font--3 columns--1 rte"
+              data-aos="hero"
+              data-aos-order="3">{{ page.content }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+{%- endif -%}
+
+{%- comment -%}
+
+
+<!-- /templates/page.about.liquid -->
+
+{% section 'page-about-1' %}
+
+{%- if page.content != '' -%}
+<section class="brick__section brick--1">
+  <div class="brick__block">
+    <div class="brick__block__text text-dark">
+      <div class="brick__block__text__inner">
+        <div class="text__standard text-left">
+          <h2 class="h4 standard__heading"
+          data-aos="hero"
+          data-aos-order="2">{{ page.title }}</h2>
+          <div class="standard__rte font--3 columns--1 rte"
+          data-aos="hero"
+          data-aos-order="3">{{ page.content }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{%- endif -%}
+
+{% section 'page-about-2' %}
+{% section 'page-about-3' %}
+{% section 'page-about-4' %}
+{% section 'page-about-5' %}
+{% section 'page-about-6' %}
+{%- endcomment -%}

@@ -1,0 +1,138 @@
+<!-- /snippets/products-recently-viewed.liquid -->
+{% comment %}
+    Renders list of recently viewed products in grid layout
+
+    Accepts:
+    - product: {Object} product (required)
+    - grid_strings: {String} contains a string of grid classes
+    - heading_title: {String} contains a string from section settings
+
+    Usage:
+    {% render 'products-recently-viewed', product: product, grid_strings: grid_strings, heading_title: section.settings.product_recently_heading %}
+{% endcomment %}
+
+{%- case product_recently_limit -%}
+  {%- when 1 -%}
+    {%- assign grid_strings = 'large-up--one-third large-up--push-one-third medium--one-third medium--push-one-third small--one-whole' -%}
+  {%- when 2 -%}
+    {%- assign grid_strings = 'large-up--one-half medium--one-half small--one-half' -%}
+  {%- when 3 -%}
+    {%- assign grid_strings = 'large-up--one-third medium--one-third small--one-third' -%}
+  {%- when 4 -%}
+    {%- assign grid_strings = 'large-up--one-quarter medium--one-half small--one-half' -%}
+  {%- when 5 -%}
+    {%- assign grid_strings = 'large-up--one-fifth medium--one-third small--one-half' -%}
+  {%- when 6 -%}
+    {%- assign grid_strings = 'large-up--one-sixth medium--one-third small--one-half' -%}
+  {%- else -%}
+    {%- assign grid_strings = 'large-up--one-quarter medium--one-third small--one-half' -%}
+{%- endcase -%}
+
+{% assign border_class = '' -%}
+{%- if settings.product_grid_outline == false -%}
+  {% assign border_class = 'product-item--borderless' -%}
+{%- endif -%}
+
+{% assign alignment_class = '' -%}
+{%- if settings.product_grid_center == true -%}
+  {% assign alignment_class = 'product-item--centered' -%}
+{%- endif -%}
+
+<script>
+  Shopify.recentlyViewed = {
+    gridStrings_1: 'large-up--one-third large-up--push-one-third medium--one-third medium--push-one-third small--one-whole',
+    gridStrings_2: 'large-up--one-half medium--one-half small--one-half',
+    gridStrings_3: 'large-up--one-third medium--one-third small--one-third',
+    gridStrings_4: 'large-up--one-quarter medium--one-half small--one-half',
+    gridStrings_5: 'large-up--one-fifth medium--one-third small--one-half',
+    gridStrings_6: 'large-up--one-sixth medium--one-third small--one-half',
+    gridStrings: 'large-up--one-quarter medium--one-third small--one-half',
+  }
+</script>
+
+<div class="recent__wrapper" id="RecentlyViewed" data-limit="{{ product_recently_limit }}">
+  <div class="recent__content product-grid{% unless settings.product_grid_outline %} product-grid--borderless{% endunless %}" id="recently-viewed-products" style="display:none">
+  </div>
+</div>
+
+<script id="recently-viewed-product-template" type="text/template">
+  <div class="product-item {{ grid_strings }} {{ border_class }} {{ alignment_class }}" data-product-grid-item>
+    <div class="product-item__image {% raw %}||itemDoubleImageClass||{% endraw %}" data-product-image>
+      <a class="product-link is-not-relative" href="{% raw %}||itemUrl||{% endraw %}" data-grid-link>
+        <div class="product-item__bg"
+          data-grid-slide
+          style="background-image:url({% raw %}||itemTopImage||{% endraw %});">
+        </div>
+        
+        <div class="product-item__bg__under {% raw %}||itemBottomImageClass||{% endraw %}"
+          style="background-image:url({% raw %}||itemBottomImage||{% endraw %});">
+        </div>
+        
+        <span class="sale-box {% raw %}||itemSaleClass||{% endraw %}">{{ 'products.product.on_sale' | t }}</span>
+      </a>
+        
+      {% if settings.quickview_enable %}
+        <button type="button" class="quick-add-button" tabindex="-1" data-button-quick-add-mobile {% if product.has_only_default_variant %} data-quick-add-button{% endif %}>
+          <span class="visually-hidden">{{ 'products.general.quick_view' | t }}</span>
+
+          <svg height="18" width="18" class="svg-loader">
+            <circle r="7" cx="9" cy="9" />
+            <circle stroke-dasharray="87.96459430051421 87.96459430051421" r="7" cx="9" cy="9" />
+          </svg>
+        </button>
+
+        <div class="slideup is-not-relative" data-quick-add-holder>
+          <button type="button" class="caps is-disable" data-focus-element tabindex="0" data-quick-add-label="{% raw %}||itemHandle||{% endraw %}" data-collection-handle="recently"  
+          {% raw %}||itemHasOnlyDefault||{% endraw %}>
+            <span>{{ 'products.general.quick_view' | t }}</span>
+
+            <span>{{ 'products.general.quick_view_added' | t }}</span>
+
+            <svg height="18" width="18" class="svg-loader">
+              <circle r="7" cx="9" cy="9" />
+              <circle stroke-dasharray="87.96459430051421 87.96459430051421" r="7" cx="9" cy="9" />
+            </svg>
+
+            <span class="caps__error" data-message-error>&nbsp;</span>
+          </button>
+
+          <div data-quick-add-form-holder></div>
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="product-information" data-product-information>
+      <a data-grid-link class="product-link" href="{% raw %}||itemUrl||{% endraw %}" data-grid-link>
+        <h3 class="product__grid__title">{% raw %}||itemTitle||{% endraw %}</h3>
+        
+        <span class="price {% raw %}||itemPriceClass||{% endraw %}">
+          <span class="new-price">
+            <small class="{% raw %}||itemFromClass||{% endraw %}">{{ 'products.general.from' | t }}</small>
+            
+            <span class="money">{% raw %}||itemPrice||{% endraw %}</span>
+          </span>
+
+          <span class="old-price {% raw %}||itemSaleClass||{% endraw %}">
+            {% raw %}||itemComparedPrice||{% endraw %}
+          </span>
+        </span>
+
+        {% if settings.quickview_enable == false and settings.color_swatches %}
+          <span class="grid__product-swatches-count {% raw %}||itemSwatchesHidden||{% endraw %}" data-swatch-count>&nbsp;</span> 
+          
+          <form class="radio__fieldset radio__fieldset--swatches radio__fieldset--small {% raw %}||itemSwatchesHidden||{% endraw %}">
+            <div class="selector-wrapper__scrollbar" data-scrollbar data-grid-swatches data-swatch-handle="{% raw %}||itemHandle||{% endraw %}" data-swatch-label="{% raw %}||itemColorLabel||{% endraw %}"></div>
+
+            <button type="button" class="radio__fieldset-arrow radio__fieldset-arrow--prev is-hidden is-not-relative" data-scrollbar-arrow-prev>
+              <span class="visually-hidden">{{ 'products.general.see_all' | t }}</span>
+            </button>
+  
+            <button type="button" class="radio__fieldset-arrow radio__fieldset-arrow--next is-hidden is-not-relative" data-scrollbar-arrow-next>
+              <span class="visually-hidden">{{ 'products.general.see_all' | t }}</span>
+            </button>
+          </form>
+        {% endif %}
+      </a>
+    </div>
+  </div>
+</script>

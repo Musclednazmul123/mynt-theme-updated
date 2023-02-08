@@ -1,0 +1,24 @@
+{% assign item_link = item_link | default: '' %}
+{% assign item_id = item_id | default: '' %}
+{% assign item_enable_sound = item_enable_sound | default: true %}
+
+{% if item_link != '' %}
+  {% capture data_html_video %}
+    <div class="pswp__custom-inner">
+      <div class="pswp__custom-content">
+        <div class="iframe-outer pswp__custom-iframe-outer">
+          {% if item_id != '' %}
+            <div id="{{ item_id }}" class="pswp__custom-iframe"
+              data-video-type="{{ item_link.type }}"
+              data-video-id="{{ item_link.id }}"
+              data-enable-sound="{{ item_enable_sound }}"></div>
+          {% else %}
+            {% render 'video-iframe' video_object: item_link %}
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  {% endcapture %}
+  {% assign data_html_video =  data_html_video | replace: '"', "'" %}
+  {{ data_html_video | strip }}
+{% endif %}

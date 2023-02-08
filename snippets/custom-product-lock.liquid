@@ -1,0 +1,123 @@
+
+
+  <script>
+
+    if(document.getElementById('Insurance-Receipt')){
+      
+    document.getElementById('Insurance-Receipt').addEventListener("click", function(e){
+      if(e.target.checked){
+        localStorage.setItem('Insurance-Receipt', 'Insurance Receipt')
+      } else {
+        localStorage.setItem('Insurance-Receipt', 'null')
+      }
+    })
+    }
+    
+  async function addpasscode(){
+    
+    try{
+      const validpass=['673053','166711', 'FBSKIIN', 'IGSKIIN', 'INSKIIN']
+    let notearea = document.getElementById('note') 
+    let addbtn = document.getElementById('add-to-cart-button')
+    if(localStorage.getItem('passcode') && validpass.includes(localStorage.getItem('passcode'))){
+      
+      if (notearea){ 
+        if(localStorage.getItem('Insurance-Receipt')=='Insurance Receipt'){
+          notearea.value = localStorage.getItem('passcode')+ " " + 'Insurance Receipt' 
+        } else{
+          notearea.value = localStorage.getItem('passcode')
+        }
+        notearea.parentNode.parentNode.style.display = "none"
+      }
+      if(addbtn){
+        
+        addbtn.click()
+        console.log('addbtn')
+      }
+    } else{
+        localStorage.clear()
+      //clear cart function
+        const clearCart=await axios.post('/cart/clear.js')
+        console.log(clearCart)
+      if (notearea){ 
+        return ;
+      }
+      
+      const pass=document.getElementById('locksmith_passcode').value
+      if (validpass.includes(pass)){
+        
+        localStorage.setItem('passcode', pass)
+        
+          if(addbtn){
+            console.log('addbtn')
+            addbtn.click()
+          }
+
+      } else{
+        alert('Sorry your passcode is invalid')
+      }
+    }
+      
+    } catch (err){
+      console.log(err)
+    }
+    
+
+  }
+
+    let formopen = false
+
+    function passcodeModal(){
+      if(localStorage.getItem('passcode')){
+        addpasscode()
+    } else {
+        
+  document.getElementById('custom-lock-feature').style.display = "block"
+  document.getElementById('MainContent').style.display = "none"
+    }
+}
+
+    if(document.getElementById("custom-button-lock")){
+      
+  document.getElementById("custom-button-lock").addEventListener("click", function(event){
+  event.preventDefault()
+    passcodeModal()
+});
+    }
+
+    if (document.getElementById("submit-lock-code")){
+    
+    document.getElementById("submit-lock-code").addEventListener("click", function(event){
+    event.preventDefault()
+      // alert('Please read and accept the contraindications above to continue')
+      
+      if(document.getElementById('locksmith_passcode_form-check').checked){
+        if (!formopen){
+          const code = document.getElementById('locksmith_passcode').value
+          const valid = ['FBSKIIN', 'IGSKIIN', 'INSKIIN']
+          if(valid.includes(code)){
+            document.getElementById('customer-information-form').style.display = "flex" 
+          }else{
+            addpasscode()
+            document.getElementById('customer-information-form').style.display = "none" 
+          }
+          formopen = false
+        } else{
+          formopen = true
+          addpasscode()
+        }
+        
+      } else{
+        alert('Please read and accept the Contraindication to continue')
+      }
+    
+});
+    }
+
+  document.getElementById('submit-lock-code-info').addEventListener("click", function(){
+    
+  })
+
+  </script>
+
+                      

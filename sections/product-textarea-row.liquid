@@ -1,0 +1,120 @@
+{%- assign text_alignment =  section.settings.text_alignment%}
+{%- assign bg_color = section.settings.bg_color -%}
+
+<div class="text-row {% if product.metafields.textarearow.heading != blank%}heading-enabled{% endif %} {{ product.metafields.textarearow.rich_text_color }}" data-section-id="{{ section.id }}" data-section-type="text-row" data-text-alignment="{{ text_alignment }}" style="background-color: {{ bg_color }};">
+
+  
+  <div class="wrapper--columns {{ section.settings.layout_position }} {{ section.settings.icon_alignment }} {{ section.settings.icon_size }}">
+    
+    {% unless product.metafields.textarearow.heading == blank and product.metafields.textarearow.rich_text == blank %}
+      <div class="text__standard {% if section.settings.layout_position == "flex--row" %} text-left {% else %} text-center {% endif %}">
+        {% if product.metafields.textarearow.heading != blank %}  
+          <h2 class="">{{ product.metafields.textarearow.heading }}</h2>
+        {% endif %}
+      </div>
+    {%- endunless -%}
+   
+    <div class="grid grid--uniform">
+
+      <div class="grid__item large-up--one-half medium--one-half small--one-half">
+        <div class="icon__column ">
+          <div class="icon__column__text">
+            {%- if  product.metafields.textarearow.title_1 != blank -%}
+              <h5>{{ product.metafields.textarearow.title_1 }}</h5>
+            {%- endif -%}
+            {% if  product.metafields.textarearow.richtext_1 != blank %}
+              <div>{{ product.metafields.textarearow.richtext_1.markdown }}</div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      <div class="grid__item large-up--one-half medium--one-half small--one-half">
+        <div class="icon__column ">
+          <div class="icon__column__text">
+            {%- if  product.metafields.textarearow.title_2 != blank -%}
+              <h5>{{ product.metafields.textarearow.title_2 }}</h5>
+            {%- endif -%}
+
+            {% for richcontent in product.metafields.textarearow.richtext_2 %}
+              <div>{{ richcontent.markdown }}</div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+      <div class="grid__item large-up--one-half medium--one-half small--one-half">
+        <div class="icon__column ">
+          <div class="icon__column__text">
+            {%- if  product.metafields.textarearow.title_3 != blank -%}
+              <h5>{{ product.metafields.textarearow.title_3 }}</h5>
+            {%- endif -%}
+
+            {% for richcontent in product.metafields.textarearow.richtext_3 %}
+              <div>{{ richcontent.markdown }}</div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+      <div class="grid__item large-up--one-half medium--one-half small--one-half">
+        <div class="icon__column ">
+          <div class="icon__column__text">
+            {%- if  product.metafields.textarearow.title_4 != blank -%}
+              <h5>{{ product.metafields.textarearow.title_4 }}</h5>
+            {%- endif -%}
+
+            {% for richcontent in product.metafields.textarearow.richtext_4 %}
+              <div>{{ richcontent.markdown }}</div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Textarea row",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Global Settings"
+    },
+    {
+      "type": "select",
+      "id": "layout_position",
+      "label": "Position",
+      "options": [
+        { "value": "flex--column", "label": "Column" },
+        { "value": "flex--row", "label": "Row" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Text alignment",
+      "default": "left",
+      "options": [
+        { "label": "Left", "value": "left" },
+        { "label": "Center", "value": "center" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "text-dark",
+      "options": [
+        { "value": "text-light", "label": "White"},
+        { "value": "text-dark", "label": "Dark"}
+      ]
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background color",
+      "default": "#fafafa"
+    }
+  ]
+}
+{% endschema %}

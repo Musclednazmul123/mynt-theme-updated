@@ -1,0 +1,329 @@
+<!-- /sections/footer.liquid -->
+
+{% assign logoImageWidth = section.settings.logo_image_width | append: "px" %}
+{% assign retina_size = section.settings.logo_image_width | times: 2 | append: 'x' %}
+
+<footer class="site-footer-wrapper {% if section.settings.image %} site-footer-wrapper--image{% endif%}" role="contentinfo" data-section-id="{{ section.id }}" data-section-type="footer">
+  {%- if section.settings.image -%}
+    {% render 'image-background', img_object: section.settings.image, frame_height_class: 'footer__image' %}
+  {%- endif -%}
+  <div class="site-footer">
+    <div class="grid">
+
+      {% if section.settings.footer_logo %}
+      <style>
+        .footer__logo img { width: {{ logoImageWidth }}; }
+      </style>
+      <div class="grid__item large-up--three-twelfths medium--one-half">
+        <a href="{{ routes.root_url }}" class="footer__logo">
+          <img src="{{ section.settings.footer_logo | img_url: retina_size }}" alt="{{ section.settings.footer_logo.alt | default: shop.name | strip_html | escape }}" id="footerLogoImg-{{ section.id }}"/>
+        </a>
+
+        {%- assign social_accounts = 'Instagram, Facebook, Twitter, TikTok, Pinterest, Tumblr, YouTube, Vimeo, Linkedin' | split: ', ' -%}
+        <ul class="footer__social unstyled inline-list">
+          {% render 'social-icon' for social_accounts as social %}
+        </ul>
+
+        <ul class="footer__copyright inline-list unstyled">
+          <li>
+            <a href="{{ shop.secure_url }}">&copy; {{ shop.name }} {{ 'now' | date: "%Y" }}</a>
+          </li>
+          {% for link in linklists[section.settings.footer_secondary_linklist].links %}
+            <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+          {% endfor %}
+        </ul>
+
+      </div>
+      {% endif %}
+
+      {% case section.blocks.size %}
+        {% when 0 %}
+        {% when 1 %}
+          {% assign footer_column_width = 'large-up--one-half' %}
+        {% when 2 %}
+          {% assign footer_column_width = 'medium-up--one-half' %}
+        {% when 3 %}
+          {% assign footer_column_width = 'large-up--one-third medium--one-half' %}
+        {% when 4 %}
+          {% assign footer_column_width = 'large-up--one-third medium--one-half' %}
+      {% endcase %}
+
+      <div class=" grid__item large-up--five-twelfths medium--one-half" {{ block.shopify_attributes }}>
+      {% for block in section.blocks %}
+        {% case block.type %}
+
+          {% when 'linklist' %}
+            {% assign linklist = linklists[block.settings.linklist] %}
+            <div class="footer__block grid__item {{ footer_column_width }}" {{ block.shopify_attributes }}>
+              {%- if linklist.title != blank -%}
+                <p class="footer__block__title">{{ linklist.title }} </p>
+              {%- endif -%}
+
+              <ul class="footer__quicklinks unstyled">
+                {% for link in linklist.links %}
+                  <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+                {% endfor %}
+              </ul>
+            </div>
+
+          {% when 'page' %}
+            {% assign page = pages[block.settings.page] %}
+            {% if page == blank or page.empty? %}
+              <div class="footer__block grid__item {{ footer_column_width }}" {{ block.shopify_attributes }}>
+                <p class="footer__block__title caps">{{ shop.name }}</p>
+                <hr>
+                <div class="rte">{{ 'home_page.onboarding.no_content' | t }}</div>
+              </div>
+            {% else %}
+              <div class="footer__block grid__item {{ footer_column_width }}" {{ block.shopify_attributes }}>
+                <h2 class="footer__block__title caps">{{ page.title | escape }}</h2>
+
+                <div class="rte">{{ page.content }}</div>
+              </div>
+            {% endif %}
+
+          {% when 'text' %}
+            <div class="footer__block grid__item {{ footer_column_width }}" {{ block.shopify_attributes }}>
+              {%- if block.settings.title != blank -%}
+                <p class="footer__block__title caps">{{ block.settings.title | escape }}</p>
+              {%- endif -%}
+
+              <div class="rte">{{ block.settings.text }}</div>
+            </div>
+
+        {% endcase %}
+        {% endfor %}
+      </div>
+      
+
+        <div class="footer__block grid__item large-up--four-twelfths medium--one-half" {{ block.shopify_attributes }}>
+          <h2 class="footer__block__title newsletter--title">{{ 'layout.footer.newsletter_title' | t }}</h2>
+
+          <div class="rte footer__newsletter__text">
+            {{ section.settings.richtext }}
+          </div>
+          
+          {%- render 'newsletter-form' form_id: 'contact-newsletter-footer', field_id: 'email_input_footer', button_id: 'subscribe' -%}
+      </div>
+
+    </div>
+
+    <div class="grid">
+      <div class="{%- comment -%} footer__secondary grid__item{%- endcomment -%} {% if section.settings.footer_payment_enable %}medium-up--two-thirds{% endif %}">
+
+        <!-- /partials/cross-border.liquid -->
+{%- form 'localization', class: 'popout--footer' -%}
+  {%- if section.settings.show_locale_selector and shop.published_locales.size > 1 -%}
+    <div>
+      <h2 class="visually-hidden" id="lang-heading">
+        {{ 'layout.footer.language' | t }}
+      </h2>
+      <div class="popout" data-popout>
+        <button type="button" class="popout__toggle" aria-expanded="false" aria-controls="lang-list" aria-describedby="lang-heading" data-popout-toggle>
+          {{ form.current_locale.endonym_name }}
+        </button>
+        <ul id="lang-list" class="popout-list" data-popout-list>
+          {% for locale in form.available_locales %}
+            <li class="popout-list__item {% if locale.iso_code == form.current_locale.iso_code %}popout-list__item--current{% endif %}">
+              <a class="popout-list__option" href="#" lang="{{ locale.iso_code }}" {% if locale.iso_code == form.current_locale.iso_code %}aria-current="true"{% endif %} data-value="{{ locale.iso_code }}" data-popout-option>
+                <span>{{ locale.endonym_name }}</span>
+              </a>
+            </li>
+          {%- endfor -%}
+        </ul>
+        <input type="hidden" name="locale_code" id="LocaleSelector" value="{{ form.current_locale.iso_code }}" data-popout-input/>
+      </div>
+    </div>
+  {%- endif -%}
+
+  {%- if section.settings.show_currency_selector and shop.enabled_currencies.size > 1 -%}
+    <div>
+      <h2 class="visually-hidden" id="currency-heading">
+        {{ 'layout.footer.currency' | t }}
+      </h2>
+      <div class="popout" data-popout>
+        <button type="button" class="popout__toggle" aria-expanded="false" aria-controls="currency-list" aria-describedby="currency-heading" data-popout-toggle>
+          {{ form.current_currency.iso_code }} {%- if form.current_currency.symbol -%}{{ form.current_currency.symbol }}{%- endif -%}
+        </button>
+        <ul id="currency-list" class="popout-list" data-popout-list>
+          {% for currency in form.available_currencies %}
+            <li class="popout-list__item {% if currency.iso_code == form.current_currency.iso_code %}popout-list__item--current{% endif %}">
+              <a class="popout-list__option" href="#" {% if currency.iso_code == form.current_currency.iso_code %}aria-current="true"{% endif %} data-value="{{ currency.iso_code }}" data-popout-option>
+                <span>{{ currency.iso_code }} {%- if currency.symbol -%}{{ currency.symbol }}{%- endif -%}</span>
+              </a>
+            </li>
+          {%- endfor -%}
+        </ul>
+        <input type="hidden" name="currency_code" id="CurrencySelector" value="{{ form.current_currency.iso_code }}" data-popout-input/>
+      </div>
+    </div>
+  {%- endif -%}
+{%- endform -%}
+
+
+      </div>
+      {% if section.settings.footer_payment_enable %}
+        {% unless shop.enabled_payment_types == empty %}
+          <ul class="footer__payment payment-icons grid__item inline-list grid__item medium-up--one-third">
+            {% for type in shop.enabled_payment_types %}
+              <li>{{ type | payment_type_svg_tag: class:'payment-icon' }}</li>
+            {% endfor %}
+          </ul>
+        {% endunless %}
+      {% endif %}
+
+    </div>
+  </div>
+
+  {% if section.settings.image %}
+    {% assign overlay_opacity = section.settings.overlay_opacity | prepend: '.' %}
+    <div class="image-overlay" style="background-color:{{ section.settings.overlay_color }} !important; opacity:{{ overlay_opacity }};"></div>
+  {% endif %}
+</footer>
+
+{% schema %}
+{
+  "name": "Footer",
+  "max_blocks": 4,
+  "settings": [
+    {
+      "label": "Logo",
+      "type": "image_picker",
+      "id": "footer_logo",
+      "info": "400 x 200px .png"
+    },
+    {
+      "type": "range",
+      "id": "logo_image_width",
+      "label": "Logo width (in pixels)",
+      "min": 50,
+      "max": 400,
+      "step": 10,
+      "unit": "px",
+      "default": 150
+    },
+    {
+      "type": "header",
+      "content": "Optional background image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Opacity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 75
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Overlay color",
+      "default": "#fff"
+    },
+    {
+      "type": "header",
+      "content": "Bottom bar"
+    },
+    {
+      "type": "link_list",
+      "id": "footer_secondary_linklist",
+      "label": "Link List",
+      "info": "This menu won't show dropdown items."
+    },
+    {
+      "type": "checkbox",
+      "id": "footer_payment_enable",
+      "label": "Show payment types",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "language selector",
+      "info": "To add a language, go to your [language settings.](/admin/settings/languages)"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_locale_selector",
+      "label": "Show language selector",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Currency selector",
+      "info": "To add a currency, go to your [payment settings.](/admin/settings/payments)"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_currency_selector",
+      "label": "Show currency selector",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Newsletter"
+    },
+    {
+      "type": "paragraph",
+      "content": "Subscribers are under 'Accepts Marketing' in your [customer admin](/admin/customers)."
+    },
+    {
+      "id": "richtext",
+      "type": "richtext",
+      "label": "Description",
+      "default": "<p>Subscribe to get special offers, free giveaways, and once-in-a-lifetime deals.</p>"
+    }
+   
+  ],
+  "blocks" : [
+    {
+      "type": "linklist",
+      "name": "Link list",
+      "settings": [
+        {
+           "type": "link_list",
+           "id": "linklist",
+           "label": "Link list",
+           "default": "footer",
+           "info": "This menu won't show dropdown items."
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "name": "Text",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading",
+          "default": "Text"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>Share store details, promotions, or brand content with your customers.</p>"
+        }
+      ]
+    },
+    {
+      "type": "page",
+      "name": "Page",
+      "settings": [
+        {
+          "id": "page",
+          "type": "page",
+          "label": "Page"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

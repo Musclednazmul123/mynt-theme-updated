@@ -1,0 +1,166 @@
+<!-- /sections/popups.liquid -->
+
+<div data-section-id="{{ section.id }}"
+     data-section-type="popups">
+  {% for block in section.blocks %}
+    {% case block.type %}
+      {% when 'popup' %}
+        <div data-large-promo data-block-id="{{block.id}}" {{ block.shopify_attributes }}>
+          <style> .block-scope-{{block.id}}{ --bg: {{ block.settings.promo_bg_color }}; } </style>
+          <div data-large-promo-inner class="modal__overlay modal__overlay--newsletter modal-text--{{ block.settings.promo_text_color }} block-scope-{{block.id}}">
+            <section class="modal__outer">
+              <div class="modal__wrapper">
+                <div class="modal__body modal--newsletter">
+                  <div class="modal-section">
+                    <div class="modal-wrapper modal-wrapper--reverse {% if block.settings.promo_image == blank %}modal-wrapper--no-image{% endif %}">
+                      <div class="modal__text">
+                        <div class="modal__inner">
+                          {% unless block.settings.promo_modal_subtitle == '' %}<p class="modal__subtitle">{{ block.settings.promo_modal_subtitle | strip_html | escape }}</p>{% endunless %}
+                          {% unless block.settings.promo_modal_title == '' %}<h2 class="modal__title">{{ block.settings.promo_modal_title | strip_html | escape }}</h2>{% endunless %}
+                          {% unless block.settings.promo_modal_richtext == '' %}<div class="modal__description rte">{{ block.settings.promo_modal_richtext }}</div>{% endunless %}
+
+                          {%- assign promo_button_text = block.settings.promo_button_text -%}
+                          {%- if promo_button_text == blank -%}
+                            {%- assign promo_button_text = 'general.newsletter_form.submit' | t -%}
+                          {%- endif -%}
+                          {%- assign field_id = 'email_input_modal-' | append: section.id -%}
+                          {%- assign button_id = 'subscribe-modal-' | append: section.id -%}
+                          {%- assign form_id = 'contact-newsletter-modal-' | append: section.id -%}
+
+                          {%- render 'newsletter-form' form_id: form_id, show_name: block.settings.enable_name, field_id: field_id, button_id: button_id, button_text: promo_button_text -%}
+                        </div>
+                      </div>
+                      {% if block.settings.promo_image %}
+                        <div class="modal__image">
+                          {%- assign img_api = block.settings.promo_image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+
+                          <div class="modal__image-img lazyload"
+                            data-bgset="{{ img_api }}"
+                            data-widths="[180, 360, 540, 720, 900, 1080, 1296, 1512, 1728, 2048, 2450, 2700, 3000, 3350, 3750, 4100]"
+                            data-aspectratio="{{ block.settings.promo_image.aspect_ratio }}"
+                            data-sizes="auto">
+                          </div>
+                          <noscript>
+                            <div class="modal__image-img no-js-image"
+                              style="background-image:url('{{ block.settings.promo_image | img_url: '1080x' }}'); background-size: cover; background-position: center center; background-repeat: no-repeat;">
+                            </div>
+                          </noscript>
+                        </div>
+                      {% endif %}
+                    </div>
+                  </div>
+                  <button data-close-modal class="close" title="{{ 'general.accessibility.close' | t }}">
+                    {%- render 'icon-close' -%}
+                  </button>
+                </div>
+                <div class="modal__underlay" data-modal-underlay></div>
+              </div>
+            </section>
+          </div>
+        </div>
+        {% when 'cookie' %}
+        <div data-tracking-consent data-block-id="{{ block.id }}" {{ block.shopify_attributes }} class="popup-cookies" data-enable="{{- block.settings.show_cookies_popup -}}">
+          {%- assign markup = 'general.cookies.cookies_link' | t -%}
+          
+          {%- if shop.privacy_policy -%}
+            {% capture markup %} <a href="{{ shop.privacy_policy.url }}">{{ 'general.cookies.cookies_link' | t }}</a> {% endcapture %}
+          {%- endif -%}
+
+          <div data-tracking-consent-inner class="popup__tracking">
+            <h4>{{- 'general.cookies.title' | t -}}</h4>
+            <p>{{- 'general.cookies.text_html' | t: cookies: markup -}}</p>
+            <button data-confirm-cookies>{{- 'general.cookies.access' | t -}}</button>
+            <button data-close-modal class="close" title="{{ 'general.accessibility.close' | t }}">
+              {%- render 'icon-close' -%}
+            </button>
+          </div>
+        </div>
+      {% else %}
+    {% endcase %}
+  {% endfor %}
+</div>
+
+{% schema %}
+{
+  "name": "Popups",
+  "settings": [],
+  "blocks" : [
+    {
+      "type": "popup",
+      "name": "Newsletter",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "promo_modal_subtitle",
+          "label": "Subheading",
+          "default": "Broadcast"
+        },
+        {
+          "type": "text",
+          "id": "promo_modal_title",
+          "label": "Heading",
+          "default": "Newsletter"
+        },
+        {
+          "id": "promo_modal_richtext",
+          "type": "richtext",
+          "label": "Description",
+          "default": "<p>Subscribe to get special offers, free giveaways, and once-in-a-lifetime deals.</p>"
+        },
+        {
+          "type": "checkbox",
+          "id": "enable_name",
+          "label": "Show name field",
+          "default": false
+        },
+        {
+          "type": "text",
+          "id": "promo_button_text",
+          "label": "Button text",
+          "default": "Join"
+        },
+        {
+          "type": "image_picker",
+          "id": "promo_image",
+          "label": "Image"
+        },
+        {
+          "type": "header",
+          "content": "Colors"
+        },
+        {
+          "type": "color",
+          "id": "promo_bg_color",
+          "label": "Background",
+          "default": "#fff"
+        },
+        {
+          "type": "select",
+          "id": "promo_text_color",
+          "label": "Text",
+          "default": "dark",
+          "options": [
+            { "value": "light", "label": "Light" },
+            { "value": "dark", "label": "Dark" }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "cookie",
+      "name": "Cookie consent",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "show_cookies_popup",
+          "label": "Enable cookie tracking popup",
+          "info": "This feature uses the Shopify [consent tracking API](https://help.shopify.com/en/manual/your-account/privacy/cookies) and will not show in all regions.  Customer privacy tracking limits must be enabled in your [online store settings](/admin/online_store/preferences).  [Learn More](https://invisiblethemes.com/link/broadcast/docs/cookies)",
+          "default": true
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

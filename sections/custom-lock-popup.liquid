@@ -1,0 +1,180 @@
+
+<div id='custom-lock-feature' style='padding-top: 40px;display: none; position: fixed; z-index: 999999999999; width: 100%; top: 90px; background: white; height: 100%;'>
+<!-- form will apper here   -->
+  <div style='display: none;' class='customer-information-form' id='customer-information-form'>
+    <p><input placeholder='Name of your General Practitioner:' style='border: 1px solid gray;'  required  class="locksmith-passcode "></p>
+    <p><input placeholder='Street Address' style='border: 1px solid gray;'  required  class="locksmith-passcode "></p>
+    <p><input placeholder='City'  style='border: 1px solid gray;'  required  class="locksmith-passcode "></p>
+    <p><input placeholder='Province'  style='border: 1px solid gray;'  required  class="locksmith-passcode "></p>
+    <p><input placeholder='Country'  style='border: 1px solid gray;'  required  class="locksmith-passcode "></p>
+    <p><input placeholder='Postal Code'  style='border: 1px solid gray;'  required  class="locksmith-passcode "></p>
+    <p><input placeholder='Telephone number'  style='border: 1px solid gray;'  required  class="locksmith-passcode "></p>
+    <div style='margin-top: 14px; margin-bottom: 14px;display: flex; justify-content: flex-end; flex-direction: row; align-items: flex-start; gap: 6px;'>
+      <input style='margin: 0px; padding: 0px; margin-top: 1px;' type="checkbox"  name="test" ><p class="ctm-span-text" style='font-size: 11px; margin: 0px; padding: 0px;'>I certify that I have a diagnosis from a certified Canadian health professional who has diagnosed me with a cardiovascular disease</p>
+    </div>
+    <button id='submit-lock-code-info' class="passcode_function button button-primary btn btn-primary action-button action_button">CONTINUE</button>
+  </div>
+<!--  end form here  -->
+<div id="locksmith-content">
+<div class="locksmith-passcode-container container page-width">
+  <form id="locksmith_passcode_form">
+    <p style='font-size: 14px;'>Enter the passcode to continue: </p>
+    <p><input style='border: 1px solid gray;'  required id="locksmith_passcode" class="locksmith-passcode "></p>
+
+<p style='font-size: 14px; margin-top: 14px;'>If you do not have a code, please <a href="/pages/connect-with-myant">contact us </a> so you can join our program:</p>
+
+<div style='margin-top: 14px; margin-bottom: 14px;display: flex; justify-content: flex-end; flex-direction: row; align-items: flex-start; gap: 6px;'>
+<input style='margin: 0px; padding: 0px; margin-top: 1px;'  type="checkbox" id="locksmith_passcode_form-check" name="test" ><p class="ctm-span-text" style='font-size: 11px; margin: 0px; padding: 0px;'>Contraindication:  If you have a pacemaker or ICD (Implantable Cardioverter Defibrillator) this device is not recommended. By clicking this box you acknowledge that you do not use either of these devices.</p>
+</div>
+
+    <p>
+<button id='submit-lock-code' class="passcode_function button button-primary btn btn-primary action-button action_button">CONTINUE</button>
+</p>
+  </form>
+</div>
+</div>
+
+<!--   <script>
+    document.getElementById('locksmith_passcode').addEventListener("input", function () {
+      const code = document.getElementById('locksmith_passcode').value
+      const valid = ['FBSKIIN', 'IGSKIIN', 'INSKIIN']
+      if(valid.includes(code)){
+        document.getElementById('customer-information-form').style.display = "flex" 
+      }else{
+        document.getElementById('customer-information-form').style.display = "none" 
+      }
+      
+    });
+  </script>
+ -->
+
+<style type="text/css">
+
+  .customer-information-form{
+    justify-content: center;
+    display: flex;
+    position: absolute;
+    flex-direction: column;
+    padding: 20px;
+    left: 0;
+    right: 0;
+    margin: 0px auto;
+    width: 600px;
+    background: white;
+    z-index: 999999999;
+  }
+  
+  .locksmith-passcode-container {
+    max-width: min(90vw, 600px);
+    margin: 20px auto;
+  }
+  .locksmith-passcode {
+    display: block;
+    width: 100%;
+    font-size: 16px; /* to make sure iOS on Safari doesn't zoom in on this */
+  }
+  .locksmith-passcode.failed {
+    outline-color: #d9534f !important;
+    border-color: #d9534f !important;
+    animation: shake .5s linear;
+    -moz-animation: shake .5s linear;
+    -webkit-animation: shake .5s linear;
+  }
+  .locksmith-passcode-container .or-cancel {
+    margin-left: 10px;
+  }
+
+  /* clear some theme conflicts */
+  #locksmith_passcode_submit span {
+    border: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* use !important to clear some *other* theme conflicts */
+  #locksmith_passcode_submit .default,
+  #locksmith_passcode_submit[disabled] .loading {
+    display: inline !important;
+  }
+
+  #locksmith_passcode_submit .loading,
+  #locksmith_passcode_submit[disabled] .default {
+    display: none !important;
+  }
+
+  @keyframes shake {
+    8%, 41% {
+      -webkit-transform: translateX(-10px);
+    }
+    25%, 58% {
+      -webkit-transform: translateX(10px);
+    }
+    75% {
+      -webkit-transform: translateX(-5px);
+    }
+    92% {
+      -webkit-transform: translateX(5px);
+    }
+    0%, 100% {
+      -webkit-transform: translateX(0);
+    }
+  }
+  @-moz-keyframes shake {
+    8%, 41% {
+      -webkit-transform: translateX(-10px);
+    }
+    25%, 58% {
+      -webkit-transform: translateX(10px);
+    }
+    75% {
+      -webkit-transform: translateX(-5px);
+    }
+    92% {
+      -webkit-transform: translateX(5px);
+    }
+    0%, 100% {
+      -webkit-transform: translateX(0);
+    }
+  }
+  @-webkit-keyframes shake {
+    8%, 41% {
+      -webkit-transform: translateX(-10px);
+    }
+    25%, 58% {
+      -webkit-transform: translateX(10px);
+    }
+    75% {
+      -webkit-transform: translateX(-5px);
+    }
+    92% {
+      -webkit-transform: translateX(5px);
+    }
+    0%, 100% {
+      -webkit-transform: translateX(0);
+    }
+  }
+
+  /* fix for Debut+Gempages, per Gempages technical support */
+  html.gemapp.video {
+    display: block;
+  }
+</style>
+
+        
+        
+      
+
+
+  <style>
+    /* fix for Debut+Gempages, per Gempages technical support */
+    html.gemapp.video {
+      display: block;
+    }
+  </style>
+</div>
+
+{% schema %}
+  {
+    "name": "Section name",
+    "settings": []
+  }
+{% endschema %}

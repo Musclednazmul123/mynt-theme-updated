@@ -1,0 +1,98 @@
+<!-- /sections/index-page.liquid -->
+
+{% assign wrapper = 'wrapper--full' %}
+{% if section.settings.full_width %}
+  {% assign wrapper = '' %}
+{% endif %}
+
+<section class="index-page {{ section.settings.text_color }}" style="background-color: {{ section.settings.bg_color }};">
+    <div class="{{ wrapper }}">
+      <div class="grid">
+        {% if section.settings.page != blank or page.empty? %}
+          {% assign page = pages[section.settings.page] %}
+
+          <div class="grid__item one-whole">
+            {% if section.settings.show_title %}
+              <h3 class="{{ section.settings.align_text }}"
+                data-aos="hero"
+                data-aos-order="1">{{ page.title | escape }}</h3>
+            {% endif %}
+            <div class="rte index-page__content {{ section.settings.align_text }}"
+              data-aos="hero"
+              data-aos-order="2">
+              {{ page.content }}
+            </div>
+          </div>
+        {% else %}
+          <div class="grid__item large-up--five-sixths large-up--push-one-twelfth">
+            <div class="rte index-page__content {{ section.settings.align_text }}">
+              {{ 'home_page.onboarding.no_content' | t }}
+            </div>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+</section>
+
+{% schema %}
+  {
+    "name": "Page",
+    "settings": [
+    {
+      "id": "page",
+      "type": "page",
+      "label": "Page"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_title",
+      "label": "Show page title",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full width",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "align_text",
+      "label": "Text alignment",
+      "default": "text-center",
+      "options": [
+        {
+          "value": "text-left",
+          "label": "Left"
+        },
+        {
+          "value": "text-center",
+          "label": "Centered"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "text-dark",
+      "options": [
+        { "value": "text-light", "label": "White"},
+        { "value": "text-dark", "label": "Dark"}
+      ]
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background",
+      "default": "#ffffff"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Page",
+      "category": "Text"
+    }
+  ]
+}
+{% endschema %}

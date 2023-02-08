@@ -1,0 +1,219 @@
+<!-- /snippets/product-tabs.liquid -->
+{% comment %}
+    Renders product tabs
+
+    Accepts:
+    - section: {Object} Current section (required)
+    - product: {Object} Current product (optional)
+
+    Usage:
+    {% render 'product-tabs', section: section, product: product  %}
+{% endcomment %}
+
+{%- assign tab_headings = "" -%}
+{%- assign tab_contents = "" -%}
+{%- assign product_description_content = product.description | strip -%}
+{%- assign product_description_split = product.description | replace: '<p>[split]</p>', '[split]' | replace: '[split]', '' | replace: '<h6></h6>', '' -%}
+{%- assign truncate_string = 'products.general.read_more' | t -%}
+{%- assign truncate_html = '<button type="button" class="standard__cta caps--large" data-truncated-button>' | append: truncate_string | append: '</button>' -%}
+
+{%- if product == nil -%}
+  {%- assign product_description_content = 'home_page.onboarding.no_description' | t -%}
+{%- endif -%}
+
+{%- if section.blocks.size > 0 -%}
+  {%- for block in section.blocks -%}
+    {%- if block.type == "tab_description" -%}
+      {% comment %}
+        Replace the heading deliminator with a string that is highly unlikely to occur naturally [!ヽ(´ー｀)/!]
+      {% endcomment %}
+      {%- assign product_description_split = product_description_split | replace: '<h6>', '[!ヽ(´ー｀)/!]' | replace: '</h6>', '[!ヽ(´ー｀)/!]' | split: '[!ヽ(´ー｀)/!]' -%}
+      {%- for item in product_description_split -%}
+        {% comment %}
+          The zero item is the product description, after that tab headings are odd and contents are even.
+        {% endcomment %}
+        {%- assign odd_mod = forloop.index0 | modulo: 2 -%}
+        {%- if odd_mod == 0 -%}
+          {%- unless forloop.index0 == 0 -%}
+            {%- assign tab_contents = tab_contents | append: item | append: '[!ヽ(´ー｀)/!]' -%}
+          {%- endunless -%}
+        {%- endif -%}
+        {%- if odd_mod == 1 -%}
+          {%- assign tab_headings = tab_headings | append: item | append: '[!ヽ(´ー｀)/!]' -%}
+        {%- endif -%}
+      {%- endfor -%}
+
+      {%- assign product_description_content = product_description_content | split: '<h6>' | first | strip -%}
+      {% break %}
+    {%- endif -%}
+  {%- endfor -%}
+{%- endif -%}
+
+{%- assign tab_headings = tab_headings | split: '[!ヽ(´ー｀)/!]' -%}
+{%- assign tab_contents = tab_contents | split: '[!ヽ(´ー｀)/!]' -%}
+
+{%- if section.settings.style == 'tabs' -%}
+  <div class="product-tabs">
+    <div class="product-tabs__head">
+      <ul class="tabs product-tabs-title" data-scrollbar data-scrollbar-slider>
+        {%- assign tab_description_attributes = 'data-block-id="' | append: section.id | append: '-0"' -%}
+        {%- assign tab_description_html = '' -%}
+        {%- assign tab_links_html = '' -%}
+        {%- assign count = 0 -%}
+        
+        {%- if product_description_content != blank -%}
+          {%- capture tab_description_html -%}
+            <li class="tab-link tab-link-0" data-focus-element data-tab="{{ count }}" tabindex="0" data-attributes-placeholder>{{ 'products.general.description' | t }}</li>
+          {%- endcapture -%}
+          {%- assign count = 1 -%}
+        {%- endif -%}
+        
+        {%- if section.blocks.size > 0 -%}
+          {%- for block in section.blocks -%}
+            {%- if block.type == "tab_description" -%}
+              {%- assign tab_description_attributes = 'data-block-id="' | append: block.id | append: '" ' | append: block.shopify_attributes -%}
+            {%- endif -%}
+
+            {%- capture tab_links_html -%}
+              {{ tab_links_html }}
+            
+              {%- if block.type == "tab_description" -%}
+                {%- for item in tab_headings -%}
+                  <li class="tab-link tab-link-{{ count }}" data-tab="{{ count }}" data-focus-element tabindex="0" {% if forloop.index0 == 0 %} data-block-id="{{ block.id }}" {{ block.shopify_attributes }}{% endif %}>{{ item }}</li>
+                  {%- assign count = count | plus: 1 -%}
+                {%- endfor -%}
+              {%- else -%}
+                <li class="tab-link tab-link-{{ count }}" data-focus-element data-tab="{{ count }}" data-block-id="{{ block.id }}" tabindex="0" {{ block.shopify_attributes }}>{{ block.settings.title }}</li>
+                {%- assign count = count | plus: 1 -%}
+              {%- endif -%}
+            {%- endcapture -%}
+          {%- endfor -%}
+        {%- endif -%}
+
+        {{ tab_description_html | replace: 'data-attributes-placeholder', tab_description_attributes }}
+
+        {{ tab_links_html }}
+      </ul>
+
+      <button type="button" class="product-tabs__arrow product-tabs__arrow--prev is-hidden is-not-relative" data-scrollbar-arrow-prev>
+        <span class="visually-hidden">{{ 'products.general.see_all' | t }}</span>
+      </button>
+
+      <button type="button" class="product-tabs__arrow product-tabs__arrow--next is-hidden is-not-relative" data-scrollbar-arrow-next>
+        <span class="visually-hidden">{{ 'products.general.see_all' | t }}</span>
+      </button>
+    </div>
+    {%- assign count = 0 -%}
+    {%- if product_description_content != blank -%}
+      <div class="rte tab-content tab-content-{{ count }}">
+        <div class="tab-content__holder tab-content__holder--truncate" data-truncated-holder>
+          <div class="tab-content__inner">
+            <div class="tab-content__entry" data-truncated-content="tab-content__entry--truncate">
+              {{ product_description_content }}
+            </div>
+          </div>
+          <div class="tab-content__actions">
+            {{ truncate_html }}
+          </div>
+        </div>
+      </div>
+      {%- assign count = 1 -%}
+    {%- endif -%}
+    
+    {%- if section.blocks.size > 0 -%}
+      {%- for block in section.blocks -%}
+        {%- if block.type == "tab_description" -%}
+          {%- for item in tab_contents -%}
+            <div class="rte tab-content tab-content-{{ count }}">
+                {{ item }}
+            </div>
+            {%- assign count = count | plus: 1 -%}
+          {%- endfor -%}
+        {%- elsif block.type == "tab_page" -%}
+          <div class="rte tab-content tab-content-{{ count }}">
+            {% assign tab_page = pages[block.settings.raw_content] %}
+            {% if tab_page.content != blank %}
+              {{ tab_page.content }}
+            {% else %}
+              {{ 'home_page.onboarding.no_content' | t }}
+            {% endif %}
+          </div>
+          {%- assign count = count | plus: 1 -%}
+        {%- else -%}
+          <div class="rte tab-content tab-content-{{ count }}">
+            {{ block.settings.raw_content }}
+          </div>
+          {%- assign count = count | plus: 1 -%}
+        {%- endif -%}
+      {%- endfor -%}
+    {%- endif -%}
+  </div>
+{%- elsif section.settings.style == 'accordions' -%}
+  <div class="product-accordion" data-accordion data-accordion-expand="true">
+    <div class="accordion">
+      {%- assign accordion_blocks_html = '' -%}
+      {%- assign accordion_description_attr = '' -%}
+
+      {%- if section.blocks.size > 0 -%}
+        {%- for block in section.blocks -%}
+          {%- if block.type == "tab_description" -%}
+            {%- assign accordion_description_attr = 'data-block-id="' | append: block.id | append: '" ' | append: block.shopify_attributes -%}
+          {%- endif -%}
+
+          {%- capture accordion_blocks_html -%}
+            {{ accordion_blocks_html }}
+
+            {%- if block.type == "tab_description" -%}
+              {%- for item in tab_headings -%}
+                <div class="accordion-row">
+                  <p class="accordion-toggle" tabindex="0" data-focus-element data-accordion-toggle {% if forloop.index0 == 0 %} data-block-id="{{ block.id }}" {{ block.shopify_attributes }}{% endif %}>
+                    {{ item }}
+                  </p>
+                  <div class="rte accordion-content" data-accordion-body>
+                    {{ tab_contents[forloop.index0] }}
+                  </div>
+                </div>
+              {%- endfor -%}
+            {%- else -%}
+              <div class="accordion-row">
+                <p class="accordion-toggle" tabindex="0" data-focus-element data-accordion-toggle data-block-id="{{ block.id }}" {{ block.shopify_attributes }}>
+                  {{ block.settings.title }}
+                </p>
+                <div class="rte accordion-content" data-accordion-body>
+                  {% assign tab_page = pages[block.settings.raw_content] %}
+                  {% if tab_page.content != blank %}
+                    {{ tab_page.content }}
+                  {% else %}
+                    {{ block.settings.raw_content }}
+                  {% endif %}
+                </div>
+              </div>
+            {%- endif -%}
+          {%- endcapture -%}
+        {%- endfor -%}
+      {%- endif -%}
+
+      {%- if product_description_content != blank -%}
+        <div class="accordion-row">
+          <p class="accordion-toggle" tabindex="0" data-focus-element data-accordion-toggle {{ accordion_description_attr }}>
+            {{ 'products.general.description' | t }}
+          </p>
+          <div class="rte accordion-content" data-accordion-body>
+            <div class="accordion-content__holder accordion-content__holder--truncate" data-truncated-holder>
+              <div class="accordion-content__inner">
+                <div class="accordion-content__entry" data-truncated-content="accordion-content__entry--truncate">
+                  {{ product_description_content }}
+                </div>
+              </div>
+              <div class="accordion-content__actions">
+                {{ truncate_html }}
+              </div>
+            </div>
+          </div>
+        </div>
+      {%- endif -%}
+
+      {{ accordion_blocks_html }}
+    </div>
+  </div>
+{%- endif -%}

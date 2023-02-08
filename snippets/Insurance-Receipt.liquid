@@ -1,0 +1,135 @@
+{% if linklists.Insurance-Receipt.links.size > 0 and
+linklists.Insurance-Receipt.links.first.type == 'product_link' %}
+
+<div
+  id="is-a-Insurance"
+  style="clear: left; margin: 30px 0"
+  class="clearfix rte"
+>
+  <p>
+    <input
+      id="Insurance-Receipt"
+      type="checkbox"
+      name="attributes[Insurance-Receipt]"
+      value="yes"
+      {% if cart.attributes.Insurance-Receipt %}
+      checked="checked"
+      {% endif %}
+      style="float: none"
+    />
+    <label
+      for="Insurance-Receipt"
+      style="display:inline; padding-left: 5px; float: none;"
+    >
+     Please send me the receipt for insurance purposes.
+    </label>
+  </p>
+</div>
+
+{% assign id = linklists.Insurance-Receipt.links.first.object.variants.first.id
+%} {% assign Insurance_wraps_in_cart = 0 %} {% for item in cart.items %} {% if
+item.id == id %} {% assign Insurance_wraps_in_cart = item.quantity %} {% endif %}
+{% endfor %}
+
+<style>
+  #updates_{{ id }} { display: none; }
+</style>
+
+<script>
+
+  Shopify.Cart = Shopify.Cart || {};
+
+  Shopify.Cart.InsuranceWrap = {};
+
+  Shopify.Cart.InsuranceWrap.set = function() {
+    var headers = new Headers({ 'Content-Type': 'application/json' });
+
+    var request = {
+      method: 'POST',
+      headers: headers,
+      body: JSON.stringify({ updates: { {{ id }}: 1 }, attributes: { 'Insurance-Receipt': true } })
+    };
+    fetch('/cart/update.js', request)
+    .then(function() {
+      location.href = '/cart';
+    });
+  }
+
+  Shopify.Cart.InsuranceWrap.remove = function() {
+    var headers = new Headers({ 'Content-Type': 'application/json' });
+
+    var request = {
+      method: 'POST',
+      headers: headers,
+      body: JSON.stringify({ updates: { {{ id }}: 0 }, attributes: { 'Insurance-Receipt': '', 'Insurance-note': '' } })
+    };
+    fetch('/cart/update.js', request)
+    .then(function() {
+      location.href = '/cart';
+    });
+  }
+
+  // If we have nothing but Insurance-wrap items in the cart.
+  {% if cart.items.size == 1 and Insurance_wraps_in_cart > 0 %}
+  document.addEventListener("DOMContentLoaded", function(){
+    Shopify.Cart.InsuranceWrap.remove();
+  });
+  // If we have more than one Insurance-wrap item in the cart.
+  {% elsif Insurance_wraps_in_cart > 1 %}
+  document.addEventListener("DOMContentLoaded", function(){
+    Shopify.Cart.InsuranceWrap.set();
+  });
+  // If we have a Insurance-wrap item in the cart but our Insurance-Receipt cart attribute has not been set.
+  {% elsif Insurance_wraps_in_cart > 0 and cart.attributes.Insurance-Receipt == blank  %}
+  document.addEventListener("DOMContentLoaded", function(){
+    Shopify.Cart.InsuranceWrap.set();
+  });
+  // If we have no Insurance-wrap item in the cart but our Insurance-Receipt cart attribute has been set.
+  {% elsif Insurance_wraps_in_cart == 0 and cart.attributes.Insurance-Receipt != blank  %}
+  document.addEventListener("DOMContentLoaded", function(){
+    Shopify.Cart.InsuranceWrap.set();
+  });
+  {% endif %}
+
+  // When the Insurance-Receipt checkbox is checked or unchecked.
+  document.addEventListener("DOMContentLoaded", function(){
+    document.querySelector('[name="attributes[Insurance-Receipt]"]').addEventListener("change", function(event) {
+      if (event.target.checked) {
+        Shopify.Cart.InsuranceWrap.set();
+      } else {
+        Shopify.Cart.InsuranceWrap.remove();
+      }
+
+    });
+
+    document.querySelector('#Insurance-note').addEventListener("change", function(evt) {
+      var note = evt.target.value;
+      var headers = new Headers({ 'Content-Type': 'application/json' });
+
+      var request = {
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify({ attributes: { 'Insurance-note': note } })
+      };
+
+      fetch('/cart/update.js', request);
+    });
+  });
+</script>
+
+{% else %}
+
+<p style="clear: left; margin: 30px 0" class="rte">
+  You attempted to add a Insurance-Receipt script to your shopping cart, but it
+  won't work because you don't have a link list with handle
+  <code>Insurance-Receipt</code> which, in turn, contains a link to your
+  Insurance-Receipt product. Please review the steps outlined
+  <a
+    href="https://help.shopify.com/manual/online-store/themes/os/customize/add-Insurance-wrap-option"
+    target="_blank"
+    rel="noopener noreferrer nofollow"
+    >here</a
+  >.
+</p>
+
+{% endif %}

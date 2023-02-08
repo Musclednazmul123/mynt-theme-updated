@@ -1,0 +1,204 @@
+<style>
+  iframe{
+    margin: auto;
+    max-width: 100%;
+  }
+  .section-video-container{
+    position: relative;
+    width:100%;
+/*     margin-top: 40px; */
+/*     margin-bottom: 40px; */
+    max-width: 100%;
+    
+  }
+  .background-color{
+    background: {{ section.settings.background-color }};
+  }
+
+  .video-player-mobile{
+    display: none;
+    max-width: 100%;
+  }
+
+  .video-player-desktop{
+    display: block;
+    margin: auto;
+    max-width: 100%;
+  }
+
+  .video-container{
+    opacity: 0;
+    width: 100%;
+    margin: auto; 
+    max-width: 100%;
+    
+ 
+  }
+
+  .video-thumbnail-desktop{
+    display: block;
+    margin: auto;
+    object-fit: cover;
+    max-width: 100%;
+  }
+
+  .video-thumbnail-mobile{
+    display: none;
+    max-width: 100%;
+  }
+
+  .play-button{
+    position: absolute;
+    height: 40px;
+    width: 40px;
+    top: calc(50% - 20px);
+    left: calc(50% - 20px);
+    z-index: 50;
+  }
+  .thumbnails-container{
+    margin: auto;
+    position: absolute;
+    left: calc(50% - {{ section.settings.video-width_d }}%/2);
+    z-index: 1;
+    max-width: 100%;
+    width: 100%;
+    
+  }
+
+  @media screen and (max-width: 768px) {
+    .video-player-mobile{
+    display: block;
+      margin: auto;
+  }
+    .section-video-container{
+    padding-top: 20px;
+    padding-bottom: 40px;
+
+    
+  }
+    .thumbnails-container{
+    margin: auto;
+    position: absolute;
+    left: calc(50% - {{ section.settings.video-width_m }}%/2);
+      max-width: 100%;
+    
+  }
+
+    .background-color{
+    background: transparent;
+  }
+
+  .video-player-desktop{
+    display: none;
+    max-width: 100%;
+  }
+    .video-thumbnail-mobile{
+    display: block;
+    margin: auto;
+      object-fit: cover;
+      max-width: 100%;
+  }
+
+    .video-thumbnail-desktop{
+    display: none;
+      max-width: 100%;
+  }
+}
+  
+</style>
+
+<div class='background-color'>
+  
+  <div  class='section-video-container'>
+    
+  <!--   <img id='video-close-button' class='close-button' onclick='closevideo()' src='{{ 'close-button.png' | asset_url }}' />  -->
+    
+    <div id="thumbnails-main-container" class='thumbnails-container'>
+    <img class='video-thumbnail-desktop' src='{{ section.settings.thumbnails | image_url }}' style='width:{{ section.settings.video-width_d }}%; height:{{ section.settings.video-height_d }}px;' />
+    <img class='video-thumbnail-mobile' src='{{ section.settings.thumbnails |image_url }}' style='width:{{ section.settings.video-width_m }}%; height:{{ section.settings.video-height_m }}px;' />
+     
+    
+    </div>
+  <!--   <img class='play-button' onclick='play(this)' src='{{ 'play-button.png' | asset_url }}' /> -->
+    <svg class='play-button' onclick='play(this)' aria-hidden="true" focusable="false" role="presentation" class="icon icon-play-circle" viewBox="0 0 96 96"><path d="M38 68.476c-.328 0-.652-.08-.948-.244A1.982 1.982 0 0136 66.476V29.524a1.97 1.97 0 011.052-1.752 1.984 1.984 0 012.048.088l28 18.476a1.996 1.996 0 010 3.336l-28 18.476c-.332.22-.716.328-1.1.328zm2-35.232v29.524l22.368-14.756L40 33.244z"/><path d="M48 4c24.256 0 44 19.744 44 44S72.256 92 48 92C23.74 92 4 72.256 4 48S23.74 4 48 4zm0-4C21.492 0 0 21.492 0 48s21.492 48 48 48 48-21.492 48-48S74.508 0 48 0z"/></svg>
+    <div id='main-video-overview-container' class='video-container'>  
+      
+    <iframe class='video-player-desktop'   width="{{ section.settings.video-width_d }}%;" height="{{ section.settings.video-height_d }}"
+  src="https://www.youtube.com/embed/xWlHqFDiX2M"
+      frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+  </iframe>
+    <iframe class='video-player-mobile'   width="{{ section.settings.video-width_m }}%" height="{{ section.settings.video-height_m }}"
+  src="https://www.youtube.com/embed/xWlHqFDiX2M"
+      frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+  </iframe>
+    </div>
+  </div>
+</div>
+
+<!-- <iframe width="916" height="515" src="https://www.youtube.com/embed/xWlHqFDiX2M" title="Myant Health Landing Video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> -->
+
+<script>
+  const video = document.getElementById("main-video-overview-container")
+  const thumb = document.getElementById("thumbnails-main-container")
+
+
+  function play(elem){
+    var videoplay = video.children[0].src.indexOf("?") > -1 ? "&" : "?"
+      video.style.opacity='1'
+    thumb.style.zIndex='-1'
+    video.children[0].src += videoplay + "autoplay=1"
+    elem.style.display = 'none'
+  }
+  
+</script>
+
+{% schema %}
+  {
+    "name": "Video-overview-section",
+    "settings": [
+      {
+        "type":"image_picker",
+        "id":"thumbnails",
+        "label":"Thumbnail Image"
+      },
+      {
+        "type":"text",
+        "id":"video-url",
+        "label":"Video Url"
+      },
+      {
+        "type":"number",
+        "id":"video-height_d",
+        "label":"Video height Desktop",
+        "default":400
+      },
+      {
+        "type":"number",
+        "id":"video-width_d",
+        "label":"Video Width Desktop",
+        "default":720
+      },
+      {
+        "type":"number",
+        "id":"video-height_m",
+        "label":"Video height Mobile",
+        "default":200
+      },
+      
+      {
+        "type":"number",
+        "id":"video-width_m",
+        "label":"Video width Mobile",
+        "default":375
+      },
+      {
+        "type":"color",
+        "id":"background-color",
+        "label":"Background"
+      }
+    ],
+    "presets":[{
+      "name":"Video-overview-section"
+    }]
+  }
+{% endschema %}

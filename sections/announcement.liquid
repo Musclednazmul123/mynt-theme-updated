@@ -1,0 +1,83 @@
+{% if section.settings.enable %}
+  <div class="announcement__wrapper"
+    data-announcement-wrapper
+    data-section-id="{{ section.id }}"
+    data-section-type="announcement">
+    <div>
+      <div class="announcement__bar announcement__bar--error">
+        <div class="announcement__message">
+          <div class="announcement__text">
+            <span class="announcement__main">{{- 'general.ie11_support_message' | t -}}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="announcement__bar">
+
+        <div class="announcement__left"></div>
+
+          {%- if section.settings.message != '' or section.settings.more != '' -%}
+
+            {%- capture message -%}
+              {%- if section.settings.message != '' -%}
+                <span class="announcement__main">{{ section.settings.message | escape }}</span>
+              {%- endif -%}
+              {%- if section.settings.message != '' and section.settings.more != '' -%}
+                <span class="announcement__divider"></span>
+              {%- endif -%}
+              {%- if section.settings.more != '' -%}
+                <span class="announcement__more">{{ section.settings.more | escape }}</span>
+              {%- endif -%}
+            {%- endcapture -%}
+
+            <div data-ticker-frame class="announcement__message">
+              <div data-ticker-scale class="ticker--unloaded announcement__scale">
+                <div data-ticker-text class="announcement__text">
+                {% if section.settings.url != blank %}
+                  <a href="{{ section.settings.url }}">
+                  {{ message }}
+                  </a>
+                {% else %}
+                  {{ message }}
+                {% endif %}
+                </div>
+              </div>
+            </div>
+          {%- endif -%}
+
+        <div class="announcement__right"></div>
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Announcement bar",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enable",
+      "label": "Enable announcement bar",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "message",
+      "label": "Text",
+      "default": "Make an announcement"
+    },
+    {
+      "type": "text",
+      "id": "more",
+      "label": "More info",
+      "default": "More info"
+    },
+    {
+      "type": "url",
+      "id": "url",
+      "label": "Link"
+    }
+  ]
+}
+{% endschema %}

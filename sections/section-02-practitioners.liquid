@@ -1,0 +1,339 @@
+{{ 'additional-information.css' | asset_url | stylesheet_tag }}
+
+<div class="additional-information" style="background-color: {{ section.settings.bg_color | color_modify : "alpha" , section.settings.bg_opacity }}">
+  <div class="content-wrapper" id="content-wrapper-{{ section.id }}" style="">
+    {% for block in section.blocks %}
+      {% case block.type %}
+        {% when 'title' %}
+          <h1 class="additional-information-heading-title" style="">
+            {{ block.settings.title }}
+          </h1>
+          <style>
+           @media (min-width: 541px) {
+           #shopify-section-{{section.id}} .additional-information-heading-title {
+                font-size: 50px;
+                color: #000000;
+                padding-top: 0px;
+                padding-bottom: 0px;
+                margin: 0;
+               }
+           }
+           @media (max-width: 540px) {
+           #shopify-section-{{section.id}} .additional-information-heading-title {
+                margin: 0;
+                max-width: 355px;
+                font-size: 36px;
+                color: #000000;
+                padding-top: 0px;
+                padding-bottom: 0px;
+               }
+           }
+          </style>
+        {% when 'description' %}
+          <p class="content-description block-{{ block.id }}" style="">
+            {{ block.settings.description | remove: "<p>" }}
+          </p>
+        <style>
+           @media (min-width: 768px) {
+           #shopify-section-{{section.id}} .block-{{block.id}}.content-description {
+                  max-width: 1185px;
+                  font-size: 28px;
+                  color: #000000;
+                  padding-top: 0px;
+                  padding-bottom: 0px; 
+             }
+           }
+           @media (max-width: 768px) {
+          #shopify-section-{{section.id}}  .block-{{block.id}}.content-description { 
+                  max-width: 360px;
+                  font-size: 18px;
+                  color: #000000;
+                  padding-top: 10px;
+                  padding-bottom: 10px;
+                  line-height: 22.6px;
+                  font-weight: 400;
+              }
+           }
+        </style>
+      {% endcase %}
+    {% endfor %}
+  </div>
+</div>
+<style>
+  #content-wrapper-{{ section.id }} .additional-information{
+    padding: 20px;
+  }
+  @media (min-width: 541px) {
+     #content-wrapper-{{ section.id }} {
+          padding-top:{{ section.settings.content_padding_t  }}px;
+          padding-bottom:{{ section.settings.content_padding_b  }}px;
+          gap:{{ section.settings.content_gap }}px;   
+     }    
+      #content-wrapper-{{ section.id }}{
+    padding-inline: {{ section.settings.padding_inline_dsk }}px; 
+  }
+  }
+  @media (max-width: 540px) {
+     #content-wrapper-{{ section.id }} {
+          padding-top:{{ section.settings.content_padding_t_mobile  }}px;
+          padding-bottom:{{ section.settings.content_padding_b_mobile  }}px;
+          gap:{{ section.settings.content_gap_mobile }}px;   
+     }    
+      #content-wrapper-{{ section.id }}{
+    padding-inline: {{ section.settings.padding_inline_mob }}px; 
+  }
+  }
+
+</style>
+{% schema %}
+{
+  "name": "Section 02 Practitioners",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "bg_opacity",
+      "label": "Background Opacity",
+      "min": 0,
+      "max": 1,
+      "step": 0.1,
+      "default": 1
+    },
+    {
+      "type": "number",
+      "id": "content_padding_t",
+      "label": "Padding Top",
+      "default": 0
+    },
+    {
+      "type": "number",
+      "id": "content_padding_b",
+      "label": "Padding Bottom",
+      "default": 0
+    },
+    {
+      "type": "number",
+      "id": "content_gap_mobile",
+      "label": "Content Gap",
+      "info": "Increase Gap between Content Items",
+      "default": 5
+    },
+    {
+      "type": "number",
+      "id": "content_padding_t_mobile",
+      "label": "Padding Top Mobile",
+      "default": 0
+    },
+    {
+      "type": "number",
+      "id": "content_padding_b_mobile",
+      "label": "Padding Bottom Mobile",
+      "default": 0
+    },
+    {
+      "type": "number",
+      "id": "content_gap",
+      "label": "Content Gap Mobile",
+      "info": "Increase Gap between Content Items",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "padding_inline_dsk",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 0,
+      "label": "Space left and right desktop"
+    },
+    {
+      "type": "range",
+      "id": "padding_inline_mob",
+      "label": "Space left and right mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "blocks": [
+       {
+      "type": "title",
+      "name": "Title Block",
+      "settings": [{
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Title"
+        },
+        {
+          "type": "range",
+          "id": "title_font",
+          "label": "Font Size",
+          "min": 0,
+          "max": 80,
+          "step": 1,
+          "unit": "px",
+          "default": 34
+        },
+        {
+          "type": "color",
+          "id": "title_color",
+          "label": "Color",
+          "default": "#000000"
+        },
+        {
+          "type": "number",
+          "id": "title_padding_t",
+          "label": "Padding Top",
+          "default": 0
+        },
+        {
+          "type": "number",
+          "id": "title_padding_b",
+          "label": "Padding Bottom",
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "title_width_mobile",
+          "min": 350,
+          "max": 400,
+          "step": 1,
+          "default": 350,
+          "label": "Title Width Mobile"
+        },
+        {
+          "type": "range",
+          "id": "title_font_mobile",
+          "label": "Font Size Mobile",
+          "min": 0,
+          "max": 40,
+          "step": 1,
+          "unit": "px",
+          "default": 34
+        },
+        {
+          "type": "color",
+          "id": "title_color_mobile",
+          "label": "Color Mobile",
+          "default": "#000000"
+        },
+        {
+          "type": "number",
+          "id": "title_padding_t_mobile",
+          "label": "Padding Top Mobile",
+          "default": 0
+        },
+        {
+          "type": "number",
+          "id": "title_padding_b_mobile",
+          "label": "Padding Bottom Mobile",
+          "default": 0
+        }
+
+      ]
+    },
+       {
+      "type": "description",
+      "name": "Description Block",
+      "settings": [{
+          "type": "text",
+          "id": "description",
+          "label": "Description",
+          "default": "<p>Description</p>"
+        },
+        {
+          "type": "range",
+          "id": "description_font",
+          "label": "Font Size",
+          "min": 0,
+          "max": 30,
+          "step": 1,
+          "unit": "px",
+          "default": 28
+        },
+        {
+          "type": "color",
+          "id": "description_color",
+          "label": "Color",
+          "default": "#000000"
+        },
+        {
+          "type": "number",
+          "id": "description_line_height",
+          "default": 20,
+          "label": "Description Line height"
+        },
+        {
+          "type": "number",
+          "id": "description_padding_t",
+          "label": "Padding Top",
+          "default": 0
+        },
+        {
+          "type": "number",
+          "id": "description_width",
+          "label": "Width",
+          "default": 1185
+        },
+        {
+          "type": "number",
+          "id": "description_padding_b",
+          "label": "Padding Bottom",
+          "default": 0
+        },
+        {
+          "type": "number",
+          "id": "description_font_weight_Mobile",
+          "label": "Description font weight Mobile",
+          "default": 400
+        },
+        {
+          "type": "range",
+          "id": "description_font_mobile",
+          "label": "Font Size Mobile",
+          "min": 0,
+          "max": 30,
+          "step": 1,
+          "unit": "px",
+          "default": 28
+        },
+        {
+          "type": "color",
+          "id": "description_color_mobile",
+          "label": "Color Mobile",
+          "default": "#000000"
+        },
+        {
+          "type": "number",
+          "id": "description_padding_t_mobile",
+          "label": "Padding Top Mobile",
+          "default": 0
+        },
+        {
+          "type": "number",
+          "id": "description_width_mobile",
+          "label": "Width Mobile",
+          "default": 1185
+        },
+        {
+          "type": "number",
+          "id": "description_padding_b_mobile",
+          "label": "Padding Bottom Mobile",
+          "default": 0
+        }
+      ]
+    }
+  ],
+  "presets": [{
+    "name": "Section 02 Practitioners"
+  }]
+}
+{% endschema %}

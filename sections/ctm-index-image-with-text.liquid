@@ -1,0 +1,403 @@
+{% liquid
+  assign blockList = ''
+  for block in section.blocks
+    assign blockList = blockList | append: block.type | append:','
+  endfor
+  assign blockArray = blockList | split: ","
+
+  assign swaparoo_class = ''
+  if blockArray[0] != 'image' and  blockArray[1] == 'image'
+    assign swaparoo_class = 'brick__section--reverse'
+  endif 
+
+  if section.settings.height == 'image-height'
+    assign padding_ratio = 1
+    if blockArray[0] == 'image'
+      assign padding_ratio = section.blocks[0].settings.image.aspect_ratio 
+    elsif blockArray[1] == 'image'
+      assign padding_ratio = section.blocks[1].settings.image.aspect_ratio 
+    endif
+    assign padding_ratio = 1 | divided_by: padding_ratio | times: 100 | append: '%'
+  endif 
+
+  assign border_class = ''
+  if section.settings.borders
+    assign border_class = 'brick--border'
+  endif
+
+  assign margin_class = ''
+  if section.settings.padding
+    assign margin_class = 'brick--margin'
+  endif
+
+  assign wrapper_class = ''
+  if section.settings.wrapper
+    assign wrapper_class = 'wrapper--brick'
+  endif
+%}
+
+
+
+{{ 'image-with-text.css' | asset_url | stylesheet_tag }}
+{{ 'ctm-index-image-with-text.css' | asset_url | stylesheet_tag }}
+
+<section data-section-id="{{ section.id }}" 
+  style="--padding-ratio: {{ padding_ratio | default: '100%' }}; padding-top:{{ section.settings.padding-top }}px; padding-bottom:{{ section.settings.padding-bottom }}px;"
+  data-section-type="image-with-text"
+  data-overflow-wrapper
+  class="brick__section brick--{{ section.blocks.size }} {{ margin_class }} {{ border_class }} {{ wrapper_class }} {{ section.settings.height }} {{ swaparoo_class }} {% if template contains 'patients' %} ctm-image-with-text-wrapper {% endif %}">
+  {% for block in section.blocks %}
+    {% case block.type %}
+      {% when 'image' %}
+        {% liquid
+          assign transparency_class = ''
+          if block.settings.transparent
+            assign transparency_class = 'hero__content--transparent'
+          endif
+          assign overlay_opacity = block.settings.overlay_opacity | times: 0.01
+        -%}
+  
+        <div class="brick__block {% if template contains 'patients' %} ctm-image-block desktop-image-ctm{% endif %}" data-overflow-frame {{ block.shopify_attributes }}>
+          <div class="brick__block__image wide-image js-overflow-container {{ block.settings.text_color }}">
+            {%- render 'ctm-image-responsive', img_object: block.settings.image, frame_height_class: section.settings.height, bg_position: block.settings.bg_position, bg_size: block.settings.bg_size, img_height: block.settings.img_height,  -%}
+          </div>
+        </div>
+     
+      {% when 'text' %}
+        <div class="brick__block {% if template contains 'patients' %} ctm-text-block {% endif %}" {{ block.shopify_attributes }} style="background-color: {{ block.settings.bg_color }};">
+          <div class="brick__block__text {{ block.settings.text_color }} ctm-iwt-style-text-relative-wrapper" data-overflow-frame >
+            <div class="brick__block__text__inner ctm-iwt-style-text-relative">
+              <div class="text__standard {{ block.settings.align_text }} ctm-iwt-text-wrapper" data-overflow-content>
+
+                {% if block.settings.title != blank %}
+                  <h2 class="h4 standard__heading heading-accent ctm-iwt-text-heading"
+                    data-aos="hero"
+                    data-aos-order="2">{{ block.settings.title }}</h2>
+                {% endif %}
+                        {% liquid
+          assign transparency_class = ''
+          if block.settings.transparent
+            assign transparency_class = 'hero__content--transparent'
+          endif
+          assign overlay_opacity = block.settings.overlay_opacity | times: 0.01
+        -%}
+      <div class="mobile-image-ctm" style="margin-top: 30px;">
+        <div class="brick__block {% if template contains 'patients' %} ctm-image-block {% endif %}" data-overflow-frame {{ block.shopify_attributes }}>
+          <div class="brick__block__image wide-image js-overflow-container {{ block.settings.text_color }}">
+            {%- render 'ctm-image-responsive', img_object: block.settings.image, frame_height_class: section.settings.height, bg_position: block.settings.bg_position, bg_size: block.settings.bg_size, img_height: block.settings.img_height,  -%}
+          </div>
+        </div>
+      </div>
+                {% if block.settings.text != blank %}
+                  {% assign font_size_class = block.settings.text_size | plus: 1 | prepend: 'font--' %}
+                  {% assign text_columns_class = block.settings.text_columns | prepend: 'columns--' %}
+                  <div class="standard__rte {{ font_size_class }} {{ text_columns_class }} ctm-iwt-text-description"
+                    data-aos="hero"
+                    data-aos-order="3">{{ block.settings.text }}</div>
+                {% endif %}
+ 
+              </div>
+            </div>
+            {% if section.settings.footerNote %}
+                  <div class="ctm-divider-wrapper-new">
+        <div class="brick__block__text ctm-divider-style-new" style="margin-left: 0px;"></div>
+        <div class="brick__block__text ctm-footer-note-style-new " style="padding-block:5px; padding-inline: 0px;">
+          {{ section.settings.footer-note }}
+        </div>
+      </div>
+            <style>
+              .ctm-footer-note-style-new p {
+                margin: 0px;
+                padding: 0px;
+                font-size: 10px;
+                font-weight: 700px;
+                max-width: 370px;
+              }
+              .ctm-divider-style-new {
+                width: 200px;
+                height: 5px;
+                padding: 0px;
+                background-color: #00438F;
+              }
+            </style>
+              {% endif %}
+          </div>
+        </div>
+      {% else %}
+    {% endcase %}
+  {% endfor %}
+  {% if section.blocks.size == 0 %}
+    {% render 'no-blocks' %}
+  {% endif %}
+</section>
+
+{% schema %}
+{
+  "name": "Image with text",
+  "max_blocks": 2,
+  "settings": [
+  {
+    "type": "select",
+    "id": "height",
+    "label": "Section height",
+    "default": "screen-height-one-half",
+    "options": [
+      { "value": "screen-height-full", "label": "Full screen height"},
+      { "value": "screen-height-three-quarters", "label": "3/4 of screen"},
+      { "value": "screen-height-two-thirds", "label": "2/3 of screen"},
+      { "value": "screen-height-one-half", "label": "1/2 of screen"},
+      { "value": "screen-height-one-third", "label": "1/3 of screen"},
+      { "value": "seven-fifty-height-hero", "label": "750px" },
+      { "value": "sixty-fifty-height-hero", "label": "650px" },
+      { "value": "five-fifty-height-hero", "label": "550px" },
+      { "value": "four-fifty-height-hero", "label": "450px" },
+      { "value": "image-height", "label": "Image height" }
+    ]
+  },
+  {
+    "type": "checkbox",
+    "id": "padding",
+    "label": "Add spacing",
+    "default": false
+  },
+    {
+      "type":"number",
+      "id":"padding-top",
+      "label":"Padding Top"
+    },
+    {
+      "type":"number",
+      "id":"padding-bottom",
+      "label":"Padding Bottom"
+    },
+  {
+    "type": "checkbox",
+    "id": "borders",
+    "label": "Add borders",
+    "default": false
+  },
+  {
+    "type": "checkbox",
+    "id": "wrapper",
+    "label": "Contain width",
+    "default": false
+  },
+  {
+    "type": "checkbox",
+    "id": "footerNote",
+    "label": "Footer Note",
+    "default": false
+  },
+  {
+    "type": "liquid",
+    "id": "footer-note",
+    "label": "Footer note",
+    "default": "<p>*** Note</p>"
+  }
+],
+"blocks": [
+    {
+      "type": "image",
+      "name": "Image",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "select",
+          "id": "bg_position",
+          "label": "Position",
+          "default": "center-center",
+          "options": [
+            { "label": "Top", "value": "center-top" },
+            { "label": "Right", "value": "right-center" },
+            { "label": "Center", "value": "center-center" },
+            { "label": "Left", "value": "left-center" },
+            { "label": "Bottom", "value": "center-bottom" }
+          ]
+        },
+        {
+          "type": "select",
+          "id": "bg_size",
+          "label": "Background Size",
+          "default": "cover",
+          "options": [
+            { "label": "Cover", "value": "cover" },
+            { "label": "Contain", "value": "contain" }
+          ]
+        },
+        {
+          "type":"number",
+          "id":"img_height",
+          "label":"Height %"
+        }
+        
+      ]
+    },
+    {
+    "type": "text",
+    "name": "Text",
+    "settings": [
+      {
+        "type": "text",
+        "id": "subheading",
+        "label": "Subeading",
+        "default": "Introducing"
+      },
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Heading",
+        "default": "Text block"
+      },
+      {
+        "type": "richtext",
+        "id": "text",
+        "label": "Text",
+        "default": "<p>Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.</p>"
+      },
+      {
+        "type":  "range",
+        "id":    "text_size",
+        "label": "Text size",
+        "min":    1,
+        "max":    5,
+        "step":   1,
+        "default":2
+      },
+      {
+        "type":  "range",
+        "id":    "text_columns",
+        "label": "Columns",
+        "min":    1,
+        "max":    3,
+        "step":   1,
+        "default":1,
+        "info": "Desktop only"
+      },
+      {
+        "type": "select",
+        "id": "align_text",
+        "label": "Text alignment",
+        "default": "text-left",
+        "options": [
+          {"value": "text-left","label": "Left"},
+          {"value": "text-center","label": "Centered"}
+        ]
+      },
+      {
+        "type": "header",
+        "content": "Style"
+      },
+      {
+        "type": "select",
+        "id": "text_color",
+        "label": "Text color",
+        "default": "text-dark",
+        "options": [
+          { "value": "text-light", "label": "White"},
+          { "value": "text-dark", "label": "Dark"}
+        ]
+      },
+      {
+        "type": "color",
+        "id": "bg_color",
+        "label": "Background",
+        "default": "#ffffff"
+      },
+      {
+        "type": "header",
+        "content": "Button"
+      },
+      {
+        "type":"text",
+        "id":"button_text",
+        "label":"Text",
+        "default":"Learn more"
+      },
+      {
+        "type":"url",
+        "id":"button_url",
+        "label":"Link"
+      },
+      {
+        "type": "select",
+        "id": "button_color",
+        "label": "Color",
+        "default": "btn--neutral",
+        "options": [
+          {"value": "btn--primary", "label": "Bright accent"},
+          {"value": "btn--secondary", "label": "Secondary accent"},
+          {"value": "btn--link", "label": "Link color"},
+          {"value": "btn--neutral", "label": "Text color"},
+          {"value": "btn--black", "label": "Black"},
+          {"value": "btn--white", "label": "White"}
+        ]
+      },
+      {
+        "type": "select",
+        "id": "button_style",
+        "label": "Style",
+        "default": "hero__btn btn btn--large btn--outline caps",
+        "options": [
+          {"value": "caps--large", "label": "Capitalized text"},
+          {"value": "hero__btn btn btn--input caps", "label": "Small button"},
+          {"value": "hero__btn btn btn--large caps", "label": "Large button"},
+          {"value": "hero__btn btn btn--input btn--outline caps", "label": "Small outline button"},
+          {"value": "hero__btn btn btn--large btn--outline caps", "label": "Large outline button"}
+        ]
+      },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "select",
+          "id": "bg_position",
+          "label": "Position",
+          "default": "center-center",
+          "options": [
+            { "label": "Top", "value": "center-top" },
+            { "label": "Right", "value": "right-center" },
+            { "label": "Center", "value": "center-center" },
+            { "label": "Left", "value": "left-center" },
+            { "label": "Bottom", "value": "center-bottom" }
+          ]
+        },
+        {
+          "type": "select",
+          "id": "bg_size",
+          "label": "Background Size",
+          "default": "cover",
+          "options": [
+            { "label": "Cover", "value": "cover" },
+            { "label": "Contain", "value": "contain" }
+          ]
+        },
+        {
+          "type":"number",
+          "id":"img_height",
+          "label":"Height %"
+        }
+    ]
+  }
+],
+  "presets": [
+    {
+      "name": "PatientsPage Image with text",
+      "category": "Image",
+      "blocks": [
+        {
+          "type": "image"
+        },
+        {
+          "type": "text"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

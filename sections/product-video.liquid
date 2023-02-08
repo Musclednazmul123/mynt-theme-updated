@@ -1,0 +1,137 @@
+ <!-- /sections/index-video.liquid -->
+ {% comment %} Settings {% endcomment %}
+ 
+ {% assign title = product.metafields.video.heading %}
+ {% assign content = product.metafields.video.content %}
+ {% assign video_url =  product.metafields.video.video_url %}
+ {% if video_url == blank %}
+ {% assign video_url = 'https://www.youtube.com/watch?v=_9VUPq3SxOc' %}
+ {% endif %}
+
+ {{ video_url.id }}
+ {% comment %} Layout {% endcomment %}
+ {% assign height = section.settings.height %}
+ {% assign text_color = section.settings.text_color %}
+ 
+
+<section class="index-video video-parent-section {{ height }} js-overflow-container" data-section-id="{{ section.id }}" data-section-type="featured-video">
+  <div class="video-wrapper {{ text_color }}">
+    <div class="hero__content__wrapper align--middle-center hero__content--transparent">
+      <div class="hero__content js-overflow-content">
+
+
+        
+        {%- if title != blank -%}
+          <h1 class="hero__title"
+            data-aos="hero"
+            data-aos-order="1">{{ title }}</h1>
+        {%- endif -%}
+        {%- if content != blank -%}
+          <div class="hero__description h5--body"
+            data-aos="hero"
+            data-aos-order="2">
+            {{ content }}
+          </div>
+        {%- endif -%}
+        {%- assign video_parent_id = 'item-video-' | append: section.id -%}
+        <a href="{{ video_url }}" 
+           class="video__play" 
+           data-aos="hero"
+           data-aos-order="3"
+           data-video-play="{%- render 'metafields-photoswipe-video-html' item_link: video_url, item_id: video_parent_id -%}">
+          {% render 'icon-play-circle' %}
+          <span class="visually-hidden">&#9654;</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Video -->
+    <div class="video__image {{ height }}">
+      
+      
+      {% for image in product.metafields.video.image %}
+
+        <div class="video__image-bg lazyload"
+          data-bgset="{% render 'bgset', image: image.src %}"
+          data-sizes="auto"
+          data-parent-fit="cover">
+        </div>
+        <noscript>
+          <div class="video__image-bg no-js-image" style="background-image:url('{{ image | img_url: '1024x' }}');"></div>
+        </noscript>
+
+      {% endfor %}
+
+    </div>
+
+
+      {% assign overlay_opacity = section.settings.overlay_opacity | times: 0.01 %}
+      <div class="image-overlay" style="background-color:{{ section.settings.overlay_color }} !important; opacity:{{ overlay_opacity }};"></div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Video",
+  "class": "featured-video-section section-fullscreen",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Global Settings"
+    },
+    {
+      "type": "header",
+      "content": "Background"
+    },
+    {
+      "type": "select",
+      "id": "height",
+      "label": "Height",
+      "default": "screen-height-three-quarters",
+      "options": [
+        { "value": "screen-height-full", "label": "Full screen height"},
+        { "value": "screen-height-three-quarters", "label": "3/4 of screen"},
+        { "value": "screen-height-two-thirds", "label": "2/3 of screen"},
+        { "value": "screen-height-one-half", "label": "1/2 of screen"},
+        { "value": "screen-height-one-third", "label": "1/3 of screen"},
+        { "value": "seven-fifty-height-hero", "label": "750px" },
+        { "value": "sixty-fifty-height-hero", "label": "650px" },
+        { "value": "five-fifty-height-hero ", "label": "550px" },
+        { "value": "four-fifty-height-hero", "label": "450px" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "text-dark",
+      "options": [
+        { "value": "text-light", "label": "White"},
+        { "value": "text-dark", "label": "Dark"}
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Overlay"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Opacity",
+      "info": "Increase contrast for legible text.",
+      "unit": "%",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default":0
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Color",
+      "default": "#000"
+    }
+  ]
+}
+{% endschema %}

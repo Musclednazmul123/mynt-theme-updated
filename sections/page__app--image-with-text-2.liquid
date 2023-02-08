@@ -1,0 +1,447 @@
+{% liquid
+  assign blockList = ''
+  for block in section.blocks
+    assign blockList = blockList | append: block.type | append:','
+  endfor
+  assign blockArray = blockList | split: ","
+
+  assign swaparoo_class = ''
+  if blockArray[0] != 'image' and  blockArray[1] == 'image'
+    assign swaparoo_class = 'brick__section--reverse'
+  endif 
+
+  if section.settings.height == 'image-height'
+    assign padding_ratio = 1
+    if blockArray[0] == 'image'
+      assign padding_ratio = section.blocks[0].settings.image.aspect_ratio 
+    elsif blockArray[1] == 'image'
+      assign padding_ratio = section.blocks[1].settings.image.aspect_ratio 
+    endif
+    assign padding_ratio = 1 | divided_by: padding_ratio | times: 100 | append: '%'
+  endif 
+
+  assign border_class = ''
+  if section.settings.borders
+    assign border_class = 'brick--border'
+  endif
+
+  assign margin_class = ''
+  if section.settings.padding
+    assign margin_class = 'brick--margin'
+  endif
+
+  assign wrapper_class = ''
+  if section.settings.wrapper
+    assign wrapper_class = 'wrapper--brick'
+  endif
+%}
+
+<section data-section-id="{{ section.id }}" 
+  style="--padding-ratio: {{ padding_ratio | default: '100%' }}"
+  data-section-type="image-with-text"
+  data-overflow-wrapper
+  class="brick__section brick--{{ section.blocks.size }} {{ margin_class }} {{ border_class }} {{ wrapper_class }} {{ section.settings.height }} {{ swaparoo_class }}">
+  {% for block in section.blocks %}
+    {% case block.type %}
+      {% when 'image' %}
+        {% liquid
+          assign transparency_class = ''
+          if block.settings.transparent
+            assign transparency_class = 'hero__content--transparent'
+          endif
+          assign overlay_opacity = block.settings.overlay_opacity | times: 0.01
+        -%}
+        <div class="brick__block" data-overflow-frame {{ block.shopify_attributes }}>
+          <div class="brick__block__image wide-image js-overflow-container {{ block.settings.text_color }}">
+            <div class="hero__content__wrapper {{ block.settings.flex_align }} {{ transparency_class }}">
+              <div class="hero__content" data-overflow-content>
+                {%- unless block.settings.title == '' -%}
+                  <h1 class="hero__title"
+                    data-aos="hero"
+                    data-aos-order="1">{{ block.settings.title | escape }}</h1>
+                {%- endunless -%}
+        
+                {%- unless block.settings.description == '' -%}
+                  <p class="hero__description h5--body"
+                    data-aos="hero"
+                    data-aos-order="2">
+                    {{ block.settings.description }}
+                  </p>
+                {%- endunless -%}
+        
+                {%- if block.settings.link_text != '' and block.settings.video_link == blank -%}
+                  <a class="{{ block.settings.button_style }} {{ block.settings.button_color }}"
+                    href="{{ block.settings.link }}"
+                    data-aos="hero"
+                    data-aos-order="3">
+                    {{ block.settings.link_text | escape }}
+                  </a>
+                {%- endif -%}
+
+
+                {%- if block.settings.video_link != blank -%}
+                  {%- if block.settings.video_link.type == 'youtube' -%}
+                    {% capture video_link %}https://www.youtube.com/watch?v={{ block.settings.video_link.id }}{% endcapture %}
+                  {%- elsif block.settings.video_link.type == 'vimeo' -%}
+                    {% capture video_link %}https://vimeo.com/{{ block.settings.video_link.id }}{% endcapture %}
+                  {%- endif -%}
+                  {%- assign video_parent_id = 'item-video-' | append: block.id -%}
+                  <a href="{{ video_link }}" 
+                    class="{{ block.settings.button_style }} {{ block.settings.button_color }} image__video__play" 
+                    data-aos="hero"
+                    data-aos-order="3"
+                    data-video-play="{%- render 'photoswipe-video-html' item_link: block.settings.video_link, item_id: video_parent_id -%}">
+                      &#8203;
+                      {% render 'icon-play' %}
+                  </a>
+                {%- endif -%}
+
+              </div>
+        
+              {%- if block.settings.link != blank -%}
+                {%- unless block.settings.link_text != blank -%}
+                  <a href="{{ block.settings.link }}" class="hero__content__link">&nbsp;</a>
+                {%- endunless -%}
+              {%- endif -%}
+            </div>
+        
+            <div class="image-overlay" style="background-color:{{ block.settings.overlay_color }} !important; opacity:{{ overlay_opacity }};"></div>
+        
+            {%- render 'image-background', img_object: block.settings.image, frame_height_class: section.settings.height, bg_position: block.settings.bg_position -%}
+          </div>
+        </div>
+      {% when 'text' %}
+        <div class="brick__block" {{ block.shopify_attributes }} style="background-color: {{ block.settings.bg_color }};">
+          <div class="brick__block__text {{ block.settings.text_color }}" data-overflow-frame >
+            <div class="brick__block__text__inner">
+              <div class="text__standard {{ block.settings.align_text }}" data-overflow-content>
+                {% if block.settings.subheading != blank %}
+                  <p class="standard__subheading"
+                    data-aos="hero"
+                    data-aos-order="1">{{ block.settings.subheading }}</p>
+                {% endif %}
+                {% if block.settings.title != blank %}
+                  <h2 class="h4 standard__heading heading-accent"
+                    data-aos="hero"
+                    data-aos-order="2">{{ block.settings.title }}</h2>
+                {% endif %}
+                {% if block.settings.text != blank %}
+                  {% assign font_size_class = block.settings.text_size | plus: 1 | prepend: 'font--' %}
+                  {% assign text_columns_class = block.settings.text_columns | prepend: 'columns--' %}
+                  <div class="standard__rte {{ font_size_class }} {{ text_columns_class }}"
+                    data-aos="hero"
+                    data-aos-order="3">{{ block.settings.text }}</div>
+                {% endif %}
+                {% if block.settings.cta_url_1 != blank %}
+                  <a class="cta-img" href="{{ block.settings.cta_url_1 }}">
+                    <img src="{{ block.settings.cta_1 | img_url: '1000x' }}" alt="{{ block.settings.cta_1.alt }}">
+                  </a>
+                {% endif %}
+                {% if block.settings.cta_url_2 != blank %}
+                  <a class="cta-img" href="{{ block.settings.cta_url_2 }}">
+                    <img src="{{ block.settings.cta_2 | img_url: '1000x' }}" alt="{{ block.settings.cta_2.alt }}">
+                  </a>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+      {% else %}
+    {% endcase %}
+  {% endfor %}
+  {% if section.blocks.size == 0 %}
+    {% render 'no-blocks' %}
+  {% endif %}
+</section>
+
+{% schema %}
+{
+  "name": "Image with text",
+  "max_blocks": 6,
+  "settings": [
+  {
+    "type": "select",
+    "id": "height",
+    "label": "Section height",
+    "default": "screen-height-one-half",
+    "options": [
+      { "value": "screen-height-full", "label": "Full screen height"},
+      { "value": "screen-height-three-quarters", "label": "3/4 of screen"},
+      { "value": "screen-height-two-thirds", "label": "2/3 of screen"},
+      { "value": "screen-height-one-half", "label": "1/2 of screen"},
+      { "value": "screen-height-one-third", "label": "1/3 of screen"},
+      { "value": "seven-fifty-height-hero", "label": "750px" },
+      { "value": "sixty-fifty-height-hero", "label": "650px" },
+      { "value": "five-fifty-height-hero", "label": "550px" },
+      { "value": "four-fifty-height-hero", "label": "450px" },
+      { "value": "image-height", "label": "Image height" }
+    ]
+  },
+  {
+    "type": "checkbox",
+    "id": "padding",
+    "label": "Add spacing",
+    "default": false
+  },
+  {
+    "type": "checkbox",
+    "id": "borders",
+    "label": "Add borders",
+    "default": false
+  },
+  {
+    "type": "checkbox",
+    "id": "wrapper",
+    "label": "Contain width",
+    "default": false
+  }
+],
+"blocks": [
+    {
+      "type": "image",
+      "name": "Image",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "select",
+          "id": "bg_position",
+          "label": "Position",
+          "default": "center-center",
+          "options": [
+            { "label": "Top", "value": "center-top" },
+            { "label": "Right", "value": "right-center" },
+            { "label": "Center", "value": "center-center" },
+            { "label": "Left", "value": "left-center" },
+            { "label": "Bottom", "value": "center-bottom" }
+          ]
+        },
+        {
+          "type": "header",
+          "content": "Overlay"
+        },
+        {
+          "type": "range",
+          "id": "overlay_opacity",
+          "label": "Opacity",
+          "info": "Increase contrast for legible text.",
+          "min": 0,
+          "max": 100,
+          "step": 5,
+          "unit": "%",
+          "default":0
+        },
+        {
+          "type": "color",
+          "id": "overlay_color",
+          "label": "Overlay color",
+          "default": "#000"
+        },
+        {
+          "type": "header",
+          "content": "Text"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading",
+          "default": "Image with text"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Subheading",
+          "default": "Tell your brand's story through images."
+        },
+        {
+          "type": "select",
+          "id": "flex_align",
+          "label": "Block alignment",
+          "default": "align--middle-center",
+          "options": [
+            { "value": "align--top-left", "label": "Top left"},
+            { "value": "align--top-center", "label": "Top center"},
+            { "value": "align--top-right", "label": "Top right"},
+            { "value": "align--middle-left", "label": "Middle left"},
+            { "value": "align--middle-center", "label": "Absolute center"},
+            { "value": "align--middle-right", "label": "Middle right"},
+            { "value": "align--bottom-left", "label": "Bottom left"},
+            { "value": "align--bottom-center", "label": "Bottom center"},
+            { "value": "align--bottom-right", "label": "Bottom right"}
+          ]
+        },
+        {
+          "type": "select",
+          "id": "text_color",
+          "label": "Text color",
+          "default": "text-light",
+          "options": [
+            { "value": "text-light", "label": "White"},
+            { "value": "text-dark", "label": "Dark"}
+          ]
+        },
+        {
+          "type": "checkbox",
+          "id": "transparent",
+          "label": "Transparent background",
+          "default": true
+        },
+        {
+          "type": "header",
+          "content": "Button"
+        },
+        {
+          "type": "text",
+          "id": "link_text",
+          "label": "Text",
+          "default": "View products",
+          "info": "Leave blank to link entire image"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        },
+        {
+          "type": "select",
+          "id": "button_color",
+          "label": "Color",
+          "default": "btn--white",
+          "options": [
+            {"value": "btn--primary", "label": "Bright accent"},
+            {"value": "btn--secondary", "label": "Secondary accent"},
+            {"value": "btn--link", "label": "Link color"},
+            {"value": "btn--neutral", "label": "Text color"},
+            {"value": "btn--black", "label": "Black"},
+            {"value": "btn--white", "label": "White"}
+          ]
+        },
+        {
+          "type": "select",
+          "id": "button_style",
+          "label": "Style",
+          "default": "hero__btn btn btn--large btn--outline caps",
+          "options": [
+            {"value": "caps--large", "label": "Capitalized text"},
+            {"value": "hero__btn btn btn--input caps", "label": "Small button"},
+            {"value": "hero__btn btn btn--large caps", "label": "Large button"},
+            {"value": "hero__btn btn btn--input btn--outline caps", "label": "Small outline button"},
+            {"value": "hero__btn btn btn--large btn--outline caps", "label": "Large outline button"}
+          ]
+        },
+        {
+          "type": "header",
+          "content": "Video popup (optional)"
+        },
+        {
+          "type": "video_url",
+          "id": "video_link",
+          "label": "Video link",
+          "accept": ["youtube", "vimeo"],
+          "info": "Video links from YouTube or Vimeo accepted."
+        }
+      ]
+    },
+    {
+    "type": "text",
+    "name": "Text",
+    "settings": [
+      {
+        "type": "text",
+        "id": "subheading",
+        "label": "Subeading",
+        "default": "Introducing"
+      },
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Heading",
+        "default": "Text block"
+      },
+      {
+        "type": "richtext",
+        "id": "text",
+        "label": "Text",
+        "default": "<p>Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.</p>"
+      },
+      {
+        "type":  "range",
+        "id":    "text_size",
+        "label": "Text size",
+        "min":    1,
+        "max":    5,
+        "step":   1,
+        "default":2
+      },
+      {
+        "type":  "range",
+        "id":    "text_columns",
+        "label": "Columns",
+        "min":    1,
+        "max":    3,
+        "step":   1,
+        "default":1,
+        "info": "Desktop only"
+      },
+      {
+        "type": "select",
+        "id": "align_text",
+        "label": "Text alignment",
+        "default": "text-left",
+        "options": [
+          {"value": "text-left","label": "Left"},
+          {"value": "text-center","label": "Centered"}
+        ]
+      },
+      {
+        "type": "header",
+        "content": "Style"
+      },
+      {
+        "type": "select",
+        "id": "text_color",
+        "label": "Text color",
+        "default": "text-dark",
+        "options": [
+          { "value": "text-light", "label": "White"},
+          { "value": "text-dark", "label": "Dark"}
+        ]
+      },
+      {
+        "type": "color",
+        "id": "bg_color",
+        "label": "Background",
+        "default": "#ffffff"
+      },
+      {
+        "type": "header",
+        "content": "CTA's"
+      },
+      {
+        "type": "image_picker",
+        "id": "cta_1",
+        "label": "CTA image 1"
+      },
+      {
+        "type":"url",
+        "id":"cta_url_1",
+        "label":"CTA Link 1"
+      },
+      {
+        "type": "image_picker",
+        "id": "cta_2",
+        "label": "CTA image 2"
+      },
+      {
+        "type":"url",
+        "id":"cta_url_2",
+        "label":"CTA Link 2"
+      }
+    ]
+  }
+]
+}
+{% endschema %}

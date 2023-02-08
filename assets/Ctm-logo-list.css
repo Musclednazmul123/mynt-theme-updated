@@ -1,0 +1,259 @@
+.shopify-section .ctm-logo-list-wrapper .logos__slider-inner {
+   justify-content: space-evenly;
+}
+#shopify-section-template--16797324247352__ef627fcb-524a-4de7-880c-6ae2b710a2d0 > div > div > div > div.logos__slider ,
+#shopify-section-template--16797324247352__e5718cfb-be5f-4aa0-b69c-003705622d81 > div > div > div > div.logos__slider {
+  max-width: unset;
+}
+#shopify-section-template--16797324247352__ef627fcb-524a-4de7-880c-6ae2b710a2d0 p ,
+#shopify-section-template--16797324247352__e5718cfb-be5f-4aa0-b69c-003705622d81 p {
+    font-weight: 600;
+    font-size: 14px;
+}
+#shopify-section-template--16797324247352__ef627fcb-524a-4de7-880c-6ae2b710a2d0 h3 ,
+#shopify-section-template--16797324247352__e5718cfb-be5f-4aa0-b69c-003705622d81 h3{
+    font-size: 16px;
+    font-weight: 700;
+}
+
+
+
+#shopify-section-template--16797324247352__cf363c6b-e3d5-4ff0-a144-50f6607f62be .standard__cta {
+max-width: 230px;
+background-color: #103860;
+border-radius: 10px;
+font-weight: 700;
+font-size: 28px;
+padding-block: 15px;
+padding-inline: 0;
+}
+#shopify-section-template--16797324247352__e5718cfb-be5f-4aa0-b69c-003705622d81 .logos__logo ,
+#shopify-section-template--16797324247352__ef627fcb-524a-4de7-880c-6ae2b710a2d0 .logos__logo{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+ .ctm-logo-list-wrapper .logos__slider-inner logos__slide .logos__slide , 
+ .ctm-logo-list-wrapper .logos__slider-inner logos__slide .logos__slide .logos__logo {
+   width: 220px !important;
+ }
+/* Patient's page section 6 Logo list white background  */
+#shopify-section-template--16797324247352__cd18ba4a-7aa1-4639-aeb3-7e977237e7fd > div > div > div > div.logos__slider > div ,
+#shopify-section-template--16797324247352__7deb31cf-1e62-4838-bf28-a6e3b1ab2c99 > div > div > div > div.logos__slider > div {
+ justify-content: space-evenly;
+}
+#shopify-section-template--16797324247352__cd18ba4a-7aa1-4639-aeb3-7e977237e7fd > div > div > div > div.logos__slider {
+ max-width: 1200px !important;
+}
+#shopify-section-template--16797324247352__7deb31cf-1e62-4838-bf28-a6e3b1ab2c99 > div > div > div ,
+#shopify-section-template--16797324247352__7deb31cf-1e62-4838-bf28-a6e3b1ab2c99 > div{
+ padding-top: 0px;
+}
+}
+
+
+@media (max-width:1000px){
+ #shopify-section-template--16797324247352__0c44684d-cf8e-4a9d-aee8-2288759271d9 {
+    height: auto !important;
+  }
+ .ctm-divider-wrapper .ctm-divider-style {
+   margin: 0 18px !important;
+ }
+}
+
+
+
+
+
+
+/* Patient's page Logo List 1 */
+#shopify-section-template--16797324247352__ef627fcb-524a-4de7-880c-6ae2b710a2d0 div.logos__slider > div ,
+#shopify-section-template--16797324247352__e5718cfb-be5f-4aa0-b69c-003705622d81 div.logos__slider > div {
+    display: flex;
+    flex-wrap: wrap;
+    white-space: normal;  
+} 
+#shopify-section-template--16797324247352__ef627fcb-524a-4de7-880c-6ae2b710a2d0 .logos__slide ,
+#shopify-section-template--16797324247352__ef627fcb-524a-4de7-880c-6ae2b710a2d0 .logos__slide .logos__logo , 
+#shopify-section-template--16797324247352__e5718cfb-be5f-4aa0-b69c-003705622d81 .logos__slide ,
+#shopify-section-template--16797324247352__e5718cfb-be5f-4aa0-b69c-003705622d81 .logos__slide .logos__logo{
+  width:330px !important;
+}
+
+/* Patient's page logo list 2 white background */
+  #shopify-section-template--16797324247352__cd18ba4a-7aa1-4639-aeb3-7e977237e7fd .logos__slider > div ,
+  #shopify-section-template--16797324247352__7deb31cf-1e62-4838-bf28-a6e3b1ab2c99 .logos__slider > div {
+    white-space: normal;
+    display: flex !important;
+    flex-wrap: wrap;
+}
+#shopify-section-template--16797324247352__cd18ba4a-7aa1-4639-aeb3-7e977237e7fd .logos__slide,
+#shopify-section-template--16797324247352__cd18ba4a-7aa1-4639-aeb3-7e977237e7fd .logos__logo,
+#shopify-section-template--16797324247352__7deb31cf-1e62-4838-bf28-a6e3b1ab2c99 .logos__slide,
+#shopify-section-template--16797324247352__7deb31cf-1e62-4838-bf28-a6e3b1ab2c99 .logos__logo{
+   width: 330px !important;
+}
+}
+
+#shopify-section-template--16797324247352__0c44684d-cf8e-4a9d-aee8-2288759271d9 h2.standard__heading {
+  color: #000;
+  max-width: 470px;
+  font-size: 30px;
+}
+
+
+#shopify-section-template--16797324247352__0c44684d-cf8e-4a9d-aee8-2288759271d9 .text__standard.text-left .standard__rte {
+  margin-top: 30px;
+  font-size: 22px; 
+}
+
+#shopify-section-template--16797324247352__0c44684d-cf8e-4a9d-aee8-2288759271d9 > section {
+  position: relative;
+}
+
+#shopify-section-template--16797324247352__0c44684d-cf8e-4a9d-aee8-2288759271d9 > section div.brick__block:nth-child(1) {
+  background-color: transparent !important;
+}
+
+
+/*  */
+/*  */
+/*  */
+.ctm-logos__slider {
+  max-width: unset;
+}
+.ctm-logos__slider-inner {
+  display: flex;
+    flex-wrap: wrap;
+    white-space: normal;
+/*   justify-content: space-evenly; */
+  display: flex;
+    justify-content: space-evenly !important;
+    align-items: center;
+    flex-direction: row;
+}
+.logos__slider .logos__slider-inner:not(.flickity-enabled) {
+    display: flex;
+    justify-content: space-evenly !important;
+    align-items: center;
+    flex-direction: row;
+}
+
+.ctm-logos__card ,.ctm-logos__slide {
+  width: 330px !important;
+  height: 261px !important;
+}
+.logos__img {
+      width: 100px;
+    height: 100px;
+}
+.ctm-logo-list-description p {
+    margin: 0px !important;
+    opacity: 0.8 !important;
+    font-size: 14px !important;
+    font-weight: 600;
+}
+.ctm-logo-list-description {
+    font-size: 14px;
+    width: 260px !important;
+    display: inline-block;
+    margin-top: 10px !important;
+}
+.ctm-logo-card-title {
+  font-weight: 700;
+  max-width: 300px;
+  text-align: center;
+  margin-inline: auto;
+  font-size: 20px;
+}
+
+.ctm-divider-wrapper {
+  margin-left: 0px !important;
+}
+  .ctm-divider-wrapper p {
+    margin-top: 10px !important;
+  }
+
+
+.ctm-style-logo-list-heading {
+  font-size: 26px;
+  font-weight: 700;
+  margin-b0ttom: 50px;
+}
+.subheading-logolist {
+  margin-bottom: 50px;
+  opacity: 0.7;
+  font-size: 18px;
+}
+
+.ctm-divider-style-wrapper p {
+    text-align: left;
+    font-size: 12px;
+    position: absolute;
+    left: 50px;
+    margin-top: 20px;
+}
+.ctm-divider-style-wrapper {
+  bottom: -70px;
+  order: 2;
+  position: relative;
+  padding-bottom: 130px;
+}
+.ctm-footer-note-border {
+  width: 192px;
+    height: 4px;
+    background: #004C96;
+    padding: 0;
+    margin: 0;
+    position: absolute;
+    left: 60px;
+}
+
+
+
+@media  (max-width: 680px){
+
+ .ctm-divider-style-wrapper .ctm-footer-note-border {
+    left: 0px;
+  }
+.ctm-divider-style-wrapper p {
+  position: relative !important;
+  left: 0px!important;
+  margin-top: 18px !important;
+}
+.ctm-divider-style-wrapper {
+  bottom: 0px !important;
+}
+}
+@media (max-width:660px) {
+  .ctm-logos__card {
+    margin-block: 30px;
+  }
+  .ctm-logos__card, .ctm-logos__slide {
+    height: usnet !important;
+  }
+  .ctm-divider-style-wrapper {
+  order: 2;
+  position: relative;
+  padding-bottom: 0;
+  margin-top: 50px;
+}
+.ctm-divider-style-wrapper {
+  bottom: -10px !important;
+}
+}
+.ctm-logos__card {
+/*   display: flex; */
+  display: block;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  align-items: center;
+}
+@media (max-width: 540px ) {
+.ctm-logos__card ,.ctm-logos__slide {
+  width: 330px !important;
+  height: unset !important;
+}
+}
+

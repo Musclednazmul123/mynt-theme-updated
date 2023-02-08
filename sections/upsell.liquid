@@ -1,0 +1,103 @@
+<section class="upsell-section">
+	<h3 class="upsell-section__title h3 standard__heading heading-accent">{{ section.settings.title }}</h3>
+	
+	<div class="upsell-section__container">
+		<div class="upsell-section__left">
+			{% if section.settings.img %}
+				{% assign img_object = section.settings.img %}
+				
+				<img class="main-image" src="{{ img_object | img_url: 'master' }}" alt="{{ img_object.alt }}">
+			{% endif %}
+		</div> <!-- /left -->
+		
+		<div class="slider upsell-section__slider-container">
+			{% for block in section.blocks %}
+				<div class="slide">
+					{% if block.settings %}
+						{% capture has_link %}
+							<a href="{{ block.settings.slider_image_url }}">
+								<h2 class="slide__title heading-accent">{{ block.settings.slider_title }}</h2>
+							</a>
+						{% endcapture %}
+					{% else %}
+						{% capture has_link %}
+							<h2 class="slide__title heading-accent">{{ block.settings.slider_title }}</h2>
+						{% endcapture %}
+					{% endif %}
+					
+					{{ has_link }}
+					
+					{% if block.settings.slider_image %}
+						<div class="slide__image-container">
+							<img src="{{ block.settings.slider_image | img_url: 'master' }}"
+							     alt="{{ block.settings.slider_image.alt }}">
+						</div>
+						<div class="slide__details">
+							<h3 class="title">{{ block.settings.slider_image_title }}</h3>
+							<p class="price">{{ block.settings.slider_price }}</p>
+						</div>
+					{% endif %}
+				</div>
+			{% endfor %}
+		</div><!-- /slider -->
+	
+	</div><!-- container -->
+</section>
+
+{% schema %}
+{
+  "name": "Upsell",
+  "class": "upsell-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Upsell Section"
+    },
+    {
+      "type": "image_picker",
+      "id": "img",
+      "label": "Image"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "upsell",
+      "name": "Slide",
+      "settings": [
+        {
+          "type": "text",
+          "id": "slider_title",
+          "label": "Slider title"
+        },
+        {
+          "type": "image_picker",
+          "id": "slider_image",
+          "label": "Slider image"
+        },
+        {
+          "type": "text",
+          "id": "slider_image_title",
+          "label": "Image title"
+        },
+        {
+          "type": "text",
+          "id": "slider_price",
+          "label": "Price"
+        },
+        {
+          "type": "url",
+          "id": "slider_image_url",
+          "label": "URL"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Upsell"
+    }
+  ]
+}
+{% endschema %}

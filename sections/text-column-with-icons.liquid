@@ -1,0 +1,186 @@
+<!-- /sections/index-text-row.liquid -->
+
+{%- assign text_alignment = section.settings.text_alignment -%}
+{%- assign bg_color = section.settings.bg_color -%}
+
+{%- case section.blocks.size -%}
+  {%- when 1 -%}
+    {%- assign grid_strings = 'large-up--one-half large-up--push-one-quarter medium--one-half medium--push-one-quarter small--one-whole' -%}
+  {%- when 2 -%}
+    {%- assign grid_strings = 'large-up--one-half medium--one-half small--one-whole' -%}
+  {%- when 3 -%}
+    {%- assign grid_strings = 'large-up--one-third medium--one-third small--one-whole' -%}
+  {%- else -%}
+    {%- assign grid_strings = 'large-up--one-quarter medium--one-half small--one-whole' -%}
+{%- endcase -%}
+
+<div class="text-column-with-icons wrapper text-row {% if section.settings.heading != blank%}heading-enabled{% endif %} {{ section.settings.text_color }}" data-section-id="{{ section.id }}" data-section-type="text-row" data-text-alignment="{{ text_alignment }}" style="background-color: {{ bg_color }};">
+
+  {% if section.settings.heading != blank%}  
+  <div class="text__standard text-center">
+    <h2 class="standard__heading">{{ section.settings.heading }}</h2>
+  </div>
+  {% endif %}
+
+  <div class="wrapper--row {{ section.settings.icon_alignment }} {{ section.settings.icon_size }}">
+    <div class="grid grid--uniform">
+
+      {%- if section.blocks.size -%}
+        {%- for block in section.blocks -%}
+          {%- assign icon_words = block.settings.icon | split: ' ' -%}
+          {%- capture icon -%}{%- for word in icon_words -%}{%- unless forloop.index == 1 -%}-{%- endunless -%}{{ word | downcase }}{%- endfor -%}{%- endcapture -%}
+            <div class="grid__item one-whole" {{ block.shopify_attributes }}>
+              <div class="icon__column {{ block.settings.icon_alignment }} {{ block.settings.icon_size }}">
+                <style>
+                  .icon__animated--{{ block.id }} {
+                    --text: {{ block.settings.icon_color }};
+                  }
+                </style>
+                <div class="icon__animated icon__animated--{{ block.id }}"
+                 {% comment %} data-aos="svg-dash" 
+                 data-aos-delay="500"
+                 {% endcomment %}
+                 >
+                   {% if block.settings.icon_img != blank%}
+                   <img class="imag_blogs" src="{{ block.settings.icon_img | img_url: "master" }}" />
+                 {% endif %}
+                </div>
+                <div class="icon__column__text">
+                  {%- if  block.settings.title != blank -%}
+                    <h5>{{ block.settings.title }}</h5>
+                  {%- endif -%}
+
+                  {%- if block.settings.text != blank -%}
+                    <p>{{ block.settings.text }}</p>
+                  {%- endif -%}
+                </div>
+              </div>
+            </div>
+        {%- endfor -%}
+      {%- endif -%}
+
+    </div>
+  </div>
+</div>
+<style>
+  .text-column-with-icons{
+    padding-top: 40px;
+    padding-bottom: 40px;
+    
+  }
+  .text-column-with-icons .standard__heading{
+    margin-bottom: 0px !important;
+  }
+  @media screen and (min-width: 750px){
+   .text-column-with-icons {
+    padding-inline: 50px;
+   }
+  }
+   @media screen and (max-width: 749px){
+   .text-column-with-icons {
+    padding-inline: 16px;
+   }
+   .text-column-with-icons .icon__animated{
+     padding-left: 0px;
+   }
+  }
+  .text-column-with-icons .imag_blogs{
+    max-width: 100px;
+  }
+  .text-column-with-icons .icon__column {
+    align-items: center;
+  }
+  .text-column-with-icons .icon__column__text p{
+    font-size: 17.6px;
+/*     color: var(---color-text); */
+  }
+</style>
+{% schema %}
+{
+  "name": "Text column with icons",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Text alignment",
+      "default": "left",
+      "options": [
+        { "label": "Left", "value": "left" },
+        { "label": "Center", "value": "center" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "icon_size",
+      "label": "Icon size",
+      "default": "icon--small",
+      "options": [
+        { "value": "icon--small", "label": "Small" },
+        { "value": "icon--large", "label": "Large" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "icon_alignment",
+      "label": "Icon placement",
+      "default": "icon--top",
+      "options": [
+        { "value": "icon--top", "label": "Top" },
+        { "value": "icon--left", "label": "Left" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "text-dark",
+      "options": [
+        { "value": "text-light", "label": "White"},
+        { "value": "text-dark", "label": "Dark"}
+      ]
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background color",
+      "default": "#fafafa"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "text-item",
+      "name": "Icon column",
+      "settings": [
+      
+        {
+          "type": "image_picker",
+          "id": "icon_img",
+          "label": "Icons"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading",
+          "default": "Title"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Text column with icons",
+      "category": "Text"
+    }
+  ]
+}
+{% endschema %}

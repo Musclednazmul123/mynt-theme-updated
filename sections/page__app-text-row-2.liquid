@@ -1,0 +1,211 @@
+<!-- /sections/index-text-row.liquid -->
+
+{%- assign text_alignment = section.settings.text_alignment -%}
+{%- assign bg_color = section.settings.bg_color -%}
+
+{%- case section.blocks.size -%}
+  {%- when 1 -%}
+    {%- assign grid_strings = 'large-up--one-half large-up--push-one-quarter medium--one-half medium--push-one-quarter small--one-whole' -%}
+  {%- when 2 -%}
+    {%- assign grid_strings = 'large-up--one-half medium--one-half small--one-whole' -%}
+  {%- when 3 -%}
+    {%- assign grid_strings = 'large-up--one-third medium--one-third small--one-whole' -%}
+  {%- else -%}
+    {%- assign grid_strings = 'large-up--one-quarter medium--one-half small--one-half' -%}
+{%- endcase -%}
+
+<div class="text-row {% if section.settings.heading != blank%}heading-enabled{% endif %} {{ section.settings.text_color }}" data-section-id="{{ section.id }}" data-section-type="text-row" data-text-alignment="{{ text_alignment }}" style="background-color: {{ bg_color }};">
+
+  
+  <div class="wrapper--columns {{ section.settings.layout_position }} {{ section.settings.icon_alignment }} {{ section.settings.icon_size }}">
+    
+    {% unless section.settings.heading == blank and section.settings.text == blank %}
+      <div class="text__standard {% if section.settings.layout_position == "flex--row" %} text-left {% else %} text-center {% endif %}">
+        {% if section.settings.heading != blank %}  
+          <h2 class="">{{ section.settings.heading }}</h2>
+        {% endif %}
+        {%- if section.settings.text != blank -%}
+        <div>{{ section.settings.text }}</div>
+        {%- endif -%}
+      </div>
+    {%- endunless -%}
+   
+   
+   
+    <div class="grid grid--uniform">
+
+      {%- if section.blocks.size -%}
+        {%- for block in section.blocks -%}
+          {%- assign icon_words = block.settings.icon | split: ' ' -%}
+          {%- capture icon -%}{%- for word in icon_words -%}{%- unless forloop.index == 1 -%}-{%- endunless -%}{{ word | downcase }}{%- endfor -%}{%- endcapture -%}
+            <div class="grid__item {{ grid_strings }}" {{ block.shopify_attributes }}>
+              <div class="icon__column {{ block.settings.icon_alignment }} {{ block.settings.icon_size }}">
+                <style>
+                  .icon__animated--{{ block.id }} {
+                    --text: {{ block.settings.icon_color }};
+                  }
+                </style>
+                <div class="icon__animated icon__animated--{{ block.id }}"
+                 {% comment %} data-aos="svg-dash" 
+                 data-aos-delay="500"
+                 {% endcomment %}
+                 >
+                 {% if block.settings.svg != blank  %}
+                 {{- block.settings.svg -}}
+                {% else %}
+                 {% render 'animated-icon', filename: block.settings.icon_name %}
+                {% endif %}
+                  </div>
+                <div class="icon__column__text">
+                  {%- if  block.settings.title != blank -%}
+                    <h5>{{ block.settings.title }}</h5>
+                  {%- endif -%}
+
+                  {%- if block.settings.text != blank -%}
+                    <p>{{ block.settings.text }}</p>
+                  {%- endif -%}
+                </div>
+              </div>
+            </div>
+        {%- endfor -%}
+      {%- endif -%}
+
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Text row with icons - 2",
+  "max_blocks": 4,
+  "settings": [
+    {
+      "type": "select",
+      "id": "layout_position",
+      "label": "Position",
+      "options": [
+        { "value": "flex--column", "label": "Column" },
+        { "value": "flex--row", "label": "Row" }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Text alignment",
+      "default": "left",
+      "options": [
+        { "label": "Left", "value": "left" },
+        { "label": "Center", "value": "center" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "icon_size",
+      "label": "Icon size",
+      "default": "icon--small",
+      "options": [
+        { "value": "icon--small", "label": "Small" },
+        { "value": "icon--large", "label": "Large" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "icon_alignment",
+      "label": "Icon placement",
+      "default": "icon--top",
+      "options": [
+        { "value": "icon--top", "label": "Top" },
+        { "value": "icon--left", "label": "Left" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "text-dark",
+      "options": [
+        { "value": "text-light", "label": "White"},
+        { "value": "text-dark", "label": "Dark"}
+      ]
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background color",
+      "default": "#fafafa"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "text-item",
+      "name": "Icon column",
+      "settings": [
+      {
+          "type": "select",
+          "id": "icon_name",
+          "label": "Icon",
+          "default": "icon-award",
+          "options": [
+            { "value": "icon-award", "label": "Award" },
+            { "value": "icon-basket-like", "label": "Basket like" },
+            { "value": "icon-basket-return", "label": "Basket return" },
+            { "value": "icon-cart-check", "label": "Cart check" },
+            { "value": "icon-cart-message", "label": "Cart message" },
+            { "value": "icon-chat", "label": "Chat" },
+            { "value": "icon-dollar", "label": "Dollar" },
+            { "value": "icon-email", "label": "Email" },
+            { "value": "icon-lock-card", "label": "Lock card" },
+            { "value": "icon-lock-shield", "label": "Lock shield" },
+            { "value": "icon-lock-window", "label": "Lock window" },
+            { "value": "icon-payment", "label": "Payment" },
+            { "value": "icon-phone", "label": "Phone" },
+            { "value": "icon-rating", "label": "Rating" },
+            { "value": "icon-send", "label": "Send" },
+            { "value": "icon-shipment-world", "label": "Shipment world" },
+            { "value": "icon-shipment", "label": "Shipment" },
+            { "value": "icon-store", "label": "Store" },
+            { "value": "icon-support-headphones", "label": "Support headphones" },
+            { "value": "icon-truck", "label": "Truck" },
+            { "value": "icon-tracker", "label": "Tracker" },
+            { "value": "icon-underwear", "label": "Underwear" },
+            { "value": "icon-walking", "label": "Walking" }
+          ]
+        },
+        {
+          "type": "textarea",
+          "id": "svg",
+          "label": "Inline SVG"
+        },
+        {
+          "type": "color",
+          "id": "icon_color",
+          "label": "Icon color",
+          "default": "#545454"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading",
+          "default": "Title"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Text",
+          "default": "Share details about your shipping policies, item returns, or customer service."
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

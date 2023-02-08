@@ -1,0 +1,231 @@
+<!-- /sections/index-products.liquid -->
+{%- assign featured_collection = collections[section.settings.featured_collection] -%}
+
+{% case section.settings.grid %}
+  {% when 2 %}
+    {% assign grid_strings = 'one-half small--one-whole medium--one-half' %}
+  {% when 3 %}
+    {% assign grid_strings = 'one-third small--one-whole medium--one-third' %}
+  {% when 4 %}
+    {% assign grid_strings = 'one-quarter small--one-whole medium--one-half' %}
+  {% when 5 %}
+    {% assign grid_strings = 'one-fifth small--one-whole medium--one-third' %}
+  {% else %}
+    {% assign grid_strings = 'one-sixth small--one-whole medium--one-third' %}
+{% endcase %}
+
+{%- assign mobile_slider = "product-grid--vertical" -%}
+{%- if section.settings.enable_slider -%}
+  {%- assign mobile_slider = "product-grid--mobile-slider" -%}
+  {%- assign grid_strings = grid_strings | split: 'medium' | first -%}
+{%- endif -%}
+
+{%- assign section_modifier = '' -%}
+{%- assign layout_grid = '' -%}
+{%- assign layout_grid_attributes = '' -%}
+{%- if section.settings.layout == 'slider' -%}
+    {%- assign section_modifier = 'layout--slider' -%}
+    {%- assign layout_grid = 'product-grid--slider flickity-button-circle' -%}
+    {%- assign layout_grid_attributes = 'data-slider="' | append: section.id | append: '" data-infinite="false" data-cell-align="left" data-watch-css="true" data-group-cells="true"' -%}
+  {%- else -%}
+    {%- assign section_modifier = 'layout--grid' -%}
+{%- endif -%}
+
+{%- assign limit = section.settings.grid | times: section.settings.rows -%}
+{%- assign showReviews = section.settings.enable_reviews -%}
+
+<section class="index-products {{ section_modifier }}"
+  data-section-id="{{ section.id }}"
+  data-section-type="product-grid"
+  data-reviews="{{ showReviews }}">
+  
+  {%- if section.settings.title != blank or section.settings.description != blank -%}
+    <div class="grid__heading-holder">
+      {%- if section.settings.title != blank -%}
+        <h2 class="{% comment %}grid__heading{% endcomment %}"
+          data-aos="hero"
+          data-aos-order="1">{{ section.settings.title }}</h2>
+      {%- endif -%}
+
+      {%- if section.settings.description != blank -%}
+        <div class="grid__description"
+          data-aos="hero"
+          data-aos-order="2">
+          {{ section.settings.description }}
+        </div>
+      {%- endif -%}
+
+      {%- if section.settings.link_text != blank -%}
+        <div class = "grid__btn-wrapper">
+          <a class="{{ section.settings.button_style }} {{ section.settings.button_color }}"
+            href="{{ featured_collection.url }}"
+            data-aos="hero"
+            data-aos-order="3">
+            {{ section.settings.link_text | escape }}
+          </a>
+        </div>
+      {%- endif -%}
+
+    </div>
+  {%- endif -%}
+
+  <div class="product-grid-outer">
+    <div class="product-grid {{ mobile_slider }} {{ layout_grid }}{% unless settings.product_grid_outline %} product-grid--borderless{% endunless %}" {{ layout_grid_attributes }}>
+      {% if featured_collection.products.size > 0 %}
+        {%- if section.settings.layout == 'slider' -%}
+          {%- assign limit = 50 -%}
+        {%- endif -%}
+
+        {% for product in featured_collection.products limit: limit %}
+          {% assign grid_int = section.settings.grid | times: 1 %}
+          {% assign animation_delay = forloop.index0 | modulo: grid_int | times: 1 %}
+          {%- assign layout_slide_attributes = 'data-slide="' | append: forloop.index0 | append: '" data-slide-index="' | append: forloop.index0 | append: '"' -%}
+          {% render 'product-grid-item', product: product, grid_strings: grid_strings, showReviews: showReviews, animation_delay: animation_delay, additional_attributes: layout_slide_attributes %}
+        {% endfor %}
+      {% else %}
+        {%- if section.settings.layout == 'slider' -%}
+          {%- assign limit = 4 -%}
+        {%- endif -%}
+
+        {% for i in (1..limit) %}
+          {%- assign layout_slide_attributes = 'data-slide="' | append: forloop.index0 | append: '" data-slide-index="' | append: forloop.index0 | append: '"' -%}
+          {% render 'onboarding-product-grid-item', grid_strings: grid_strings, showReviews: showReviews, additional_attributes: layout_slide_attributes, index: forloop.index, placeholder_root: 'product-' %}
+        {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+  {
+      "name": "Featured collection",
+      "class": "featured-collection",
+      "settings": [
+        {
+          "type": "header",
+          "content": "Collection"
+        },
+        {
+          "type": "collection",
+          "id": "featured_collection",
+          "label": "Collection"
+        },
+         {
+          "type": "header",
+          "content": "Layout"
+        },
+        {
+          "type": "select",
+          "id": "layout",
+          "label": "Layout",
+          "options": [
+            {
+              "value": "grid",
+              "label": "Grid"
+            },
+            {
+              "value": "slider",
+              "label": "Slider"
+            }
+          ],
+          "default": "grid"
+        },
+        {
+          "type":    "range",
+          "id":      "grid",
+          "min":     2,
+          "max":     6,
+          "step":    1,
+          "label":   "Products per row",
+          "default": 4,
+          "info": "For Grid layout only"
+        },
+        {
+          "type":    "range",
+          "id":      "rows",
+          "min":     1,
+          "max":     8,
+          "step":    1,
+          "label":   "Number of rows",
+          "default": 1,
+          "info": "For Grid layout only"
+        },
+        {
+          "type": "checkbox",
+          "id": "enable_reviews",
+          "label": "Enable reviews",
+          "default": false,
+          "info": "Install Shopify's free [Product Reviews app](https://apps.shopify.com/product-reviews) before enabling this option."
+        },
+        {
+          "type": "header",
+          "content": "Text"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading",
+          "default": "Featured collection"
+        },
+        {
+          "type": "richtext",
+          "id": "description",
+          "label": "Description"
+        },
+        {
+          "type": "header",
+          "content": "Button",
+          "info": "Links to collection page"
+        },
+        {
+          "type": "text",
+          "id": "link_text",
+          "label": "Text"
+        },
+        {
+          "type": "select",
+          "id": "button_color",
+          "label": "Color",
+          "default": "btn--black",
+          "options": [
+            {"value": "btn--primary", "label": "Bright accent"},
+            {"value": "btn--secondary", "label": "Secondary accent"},
+            {"value": "btn--link", "label": "Link color"},
+            {"value": "btn--neutral", "label": "Text color"},
+            {"value": "btn--black", "label": "Black"},
+            {"value": "btn--white", "label": "White"}
+          ]
+        },
+        {
+          "type": "select",
+          "id": "button_style",
+          "label": "Style",
+          "default": "hero__btn btn btn--input btn--outline caps",
+          "options": [
+            {"value": "caps--large", "label": "Capitalized text"},
+            {"value": "hero__btn btn btn--input caps", "label": "Small button"},
+            {"value": "hero__btn btn btn--large caps", "label": "Large button"},
+            {"value": "hero__btn btn btn--input btn--outline caps", "label": "Small outline button"},
+            {"value": "hero__btn btn btn--large btn--outline caps", "label": "Large outline button"}
+          ]
+        },
+        {
+          "type": "header",
+          "content": "Mobile slider"
+        },
+        {
+          "type": "checkbox",
+          "id": "enable_slider",
+          "label": "Enable slider",
+          "default": true,
+          "info": "Horizontal slider in mobile layout."
+        }
+      ],
+      "presets": [
+        {
+          "category": "Collection",
+          "name": "Featured collection"
+        }
+      ]
+  }
+{% endschema %}
