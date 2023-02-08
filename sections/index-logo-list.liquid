@@ -7,38 +7,28 @@
     --bg: {{ section.settings.bg_color }};
     ---logo-opacity: {{ logo_opacity }};
   }
-  .logos__slider-inner{
-    align-items: baseline !important;
-  }
-  
 </style>
 
-<div class="logos logos--{{ section.id }} {{ section.settings.text_color }} {% if page.url contains 'patients' %} ctm-logo-list-wrapper {% endif %}" data-section-id="{{ section.id }}" data-section-type="logos">
+<div class="logos logos--{{ section.id }} {{ section.settings.text_color }}" data-section-id="{{ section.id }}" data-section-type="logos">
   <div class="container">
-    <div style="background: {{ section.settings.bg_color }};" class="logos__wrapper {% if heading.size %} logos__wrapper--tall{% endif %}">
+    <div class="logos__wrapper {% if heading.size %} logos__wrapper--tall{% endif %}">
 
       {%- if heading != blank -%}
         <h2 class="h5 caps">{{ heading }}</h2>
       {%- endif -%}
-      {% if section.settings.subheading_checkbox %} 
 
-
-      {% if section.settings.subheading_patientPage != blank %}
-          <p class="subheading-logolist">{{ section.settings.subheading_patientPage }} </p>
-      {% endif %}
-          {%endif%}
       <div class="logos__slider">
-        <div style="justify-content: {{ section.settings.space-between-logos }};" class="logos__slider-inner" data-slider-logo data-block-scroll>
+        <div class="logos__slider-inner" data-slider-logo data-block-scroll>
           {%- for block in section.blocks -%}
             {%- assign logo = block.settings.logo -%}
   
-            <div  class="logos__slide{% if forloop.first %} is-selected{% endif %}" 
+            <div class="logos__slide{% if forloop.first %} is-selected{% endif %}" 
               data-slide="{{- block.id -}}"
               data-slide-index="{{ forloop.index0 }}" 
               data-block="item_logo" 
-              {{ block.shopify_attributes }} style="width:{{ block.settings.block-width }}px;">
+              {{ block.shopify_attributes }}>
               {%- if logo != blank -%}
-                <div class="logos__logo" style="width:{{ block.settings.block-width }}px;">
+                <div class="logos__logo">
                   <div class="logos__img lazyload fade-in" 
                     style="width: {{ block.settings.logo_width }}px; height: {{- block.settings.logo_width | divided_by: logo.aspect_ratio -}}px;"
                     data-bgset="{%- render 'bgset', image: logo -%}"
@@ -46,8 +36,6 @@
                     data-parent-fit="cover"
                     data-aspectratio="{{ logo.aspect_ratio }}">
                   </div>
-                  <h3 style="font-size: 16px;">{{ block.settings.title }}</h3>
-                  <span class="ctm-logo-list-description" style="font-size: 14px;width:200px;display:inline-block">{{ block.settings.description }}</span>
                 
                   <noscript>
                     <div class="logos__img no-js-image" style="background-image: url( {{ logo | img_url: '180x' }} ); width: {{ block.settings.logo_width }}px; height: {{- block.settings.logo_width | divided_by: logo.aspect_ratio -}}px;"></div>
@@ -62,45 +50,24 @@
               {%- endif -%}
             </div>
           {%- endfor -%}
-
         </div>
       </div>
 
       <div class="logos__slider-text" data-slider-text id="logos__slider-text--{{ section.id }}">
         {%- for block in section.blocks -%}
-           {% case block.type %}
-             {% when 'logo-item' %}
-            
           {%- assign text = block.settings.description -%}
 
           <div class="logos__slide logos__slide--{{ block.id }}" data-block="item_logo" data-slide-index="{{ forloop.index0 }}" 
           data-slide="{{- block.id -}}"
           {{ block.shopify_attributes }}>
             {%- if text -%}
-<!--               <p class="h6--body">{{ text }}</p> -->
+              <p class="h6--body">{{ text }}</p>
             {%- endif -%}
           </div>
-        {% else %}
-             {% endcase %}
         {%- endfor -%}
       </div>
-  {% if section.settings.footnote %}
-  
-          
-      <div class="ctm-divider-wrapper">
-        <div class="brick__block__text ctm-divider-style"></div>
-        <div class="brick__block__text ctm-footer-note-style ">
-          {{ section.settings.footer-note-content-2 }} 
-        </div>
-          {{ section.settings.footer-note-content }}
-      </div>
-      
-    
-
-  {% endif %}
     </div>
   </div>
-
 </div>
 
 {% schema %}
@@ -108,17 +75,6 @@
   "name": "Logo list",
   "max_blocks": 25,
   "settings": [
-    {
-      "type": "checkbox",
-      "id": "subheading_checkbox",
-      "label": "Enable Sub-Heading"
-    },
-    {
-      "type": "text",
-      "id": "subheading_patientPage",
-      "label": "Sub Heading",
-      "default": "Logo list"      
-    },
     {
       "type": "text",
       "id": "title",
@@ -137,16 +93,6 @@
     },
     {
       "type": "select",
-      "id": "space-between-logos",
-      "label": "Text color",
-      "default": "space-evenly",
-      "options": [
-        { "value": "center", "label": "Center"},
-        { "value": "space-evenly", "label": "Space Even"}
-      ]
-    },
-    {
-      "type": "select",
       "id": "text_color",
       "label": "Text color",
       "default": "text-dark",
@@ -160,24 +106,7 @@
       "id": "bg_color",
       "label": "Background color",
       "default": "#fafafa"
-    },
-    {
-      "type": "checkbox",
-      "id": "footnote",
-      "label": "Enable Foot Note"
-    },
-   {
-          "type": "liquid",
-          "id": "footer-note-content",
-          "label": "Footer note content",
-          "default": "<p>*** Note</p>"
-   },
-   {
-          "type": "liquid",
-          "id": "footer-note-content-2",
-          "label": "Footer note content",
-          "default": "<p>*** Note</p>"
-   }
+    }
   ],
   "blocks": [
     {
@@ -185,21 +114,10 @@
       "name": "Logo",
       "settings": [
         {
-          "type": "liquid",
-          "id": "title",
-          "label": "Title"
-        },
-        {
           "type": "richtext",
           "id": "description",
           "label": "Description",
           "default": "<p>Include a brief quote from a brand that loves your products</p>"
-        },
-        {
-          "type":"number",
-          "id":"block-width",
-          "label":"Card Width",
-          "default":220
         },
         {
           "type": "image_picker",

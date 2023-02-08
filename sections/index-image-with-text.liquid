@@ -1,24 +1,24 @@
 {% liquid
   assign blockList = ''
   for block in section.blocks
-    assign blockList = blockList | append: block.type | append: ','
+    assign blockList = blockList | append: block.type | append:','
   endfor
-  assign blockArray = blockList | split: ','
+  assign blockArray = blockList | split: ","
 
   assign swaparoo_class = ''
-  if blockArray[0] != 'image' and blockArray[1] == 'image'
+  if blockArray[0] != 'image' and  blockArray[1] == 'image'
     assign swaparoo_class = 'brick__section--reverse'
-  endif
+  endif 
 
   if section.settings.height == 'image-height'
     assign padding_ratio = 1
     if blockArray[0] == 'image'
-      assign padding_ratio = section.blocks[0].settings.image.aspect_ratio
+      assign padding_ratio = section.blocks[0].settings.image.aspect_ratio 
     elsif blockArray[1] == 'image'
-      assign padding_ratio = section.blocks[1].settings.image.aspect_ratio
+      assign padding_ratio = section.blocks[1].settings.image.aspect_ratio 
     endif
     assign padding_ratio = 1 | divided_by: padding_ratio | times: 100 | append: '%'
-  endif
+  endif 
 
   assign border_class = ''
   if section.settings.borders
@@ -36,15 +36,15 @@
   endif
 %}
 
+
+
 {{ 'image-with-text.css' | asset_url | stylesheet_tag }}
 
-<section
-  data-section-id="{{ section.id }}"
+<section data-section-id="{{ section.id }}" 
   style="--padding-ratio: {{ padding_ratio | default: '100%' }}; padding-top:{{ section.settings.padding-top }}px; padding-bottom:{{ section.settings.padding-bottom }}px;"
   data-section-type="image-with-text"
   data-overflow-wrapper
-  class="brick__section brick--{{ section.blocks.size }} {{ margin_class }} {{ border_class }} {{ wrapper_class }} {{ section.settings.height }} {{ swaparoo_class }} {% if template contains 'patients' %} ctm-image-with-text-wrapper {% endif %}"
->
+  class="brick__section brick--{{ section.blocks.size }} {{ margin_class }} {{ border_class }} {{ wrapper_class }} {{ section.settings.height }} {{ swaparoo_class }}">
   {% for block in section.blocks %}
     {% case block.type %}
       {% when 'image' %}
@@ -55,187 +55,126 @@
           endif
           assign overlay_opacity = block.settings.overlay_opacity | times: 0.01
         -%}
-        <div
-          class="brick__block {% if template contains 'patients' %} ctm-image-block {% endif %} {% if template contains 'practitioners' %} ctm-section-05 {% endif %}"
-          data-overflow-frame
-          {{ block.shopify_attributes }}
-        >
+        <div class="brick__block" data-overflow-frame {{ block.shopify_attributes }}>
           <div class="brick__block__image wide-image js-overflow-container {{ block.settings.text_color }}">
             <div class="hero__content__wrapper {{ block.settings.flex_align }} {{ transparency_class }}">
               <div class="hero__content" data-overflow-content>
                 {%- unless block.settings.title == '' -%}
-                  <h1
-                    class="hero__title"
+                  <h1 class="hero__title"
                     data-aos="hero"
-                    data-aos-order="1"
-                  >
-                    {{ block.settings.title | escape }}
-                  </h1>
+                    data-aos-order="1">{{ block.settings.title | escape }}</h1>
                 {%- endunless -%}
-
+        
                 {%- unless block.settings.description == '' -%}
-                  <p
-                    class="hero__description h5--body"
+                  <p class="hero__description h5--body"
                     data-aos="hero"
-                    data-aos-order="2"
-                  >
+                    data-aos-order="2">
                     {{ block.settings.description }}
                   </p>
                 {%- endunless -%}
-              </div>
+        
+                {%- if block.settings.link_text != '' and block.settings.video_link == blank -%}
+                  <a class="{{ block.settings.button_style }} {{ block.settings.button_color }}"
+                    href="{{ block.settings.link }}"
+                    data-aos="hero"
+                    data-aos-order="3">
+                    {{ block.settings.link_text | escape }}
+                  </a>
+                {%- endif -%}
 
+
+                {%- if block.settings.video_link != blank -%}
+                  {%- if block.settings.video_link.type == 'youtube' -%}
+                    {% capture video_link %}https://www.youtube.com/watch?v={{ block.settings.video_link.id }}{% endcapture %}
+                  {%- elsif block.settings.video_link.type == 'vimeo' -%}
+                    {% capture video_link %}https://vimeo.com/{{ block.settings.video_link.id }}{% endcapture %}
+                  {%- endif -%}
+                  {%- assign video_parent_id = 'item-video-' | append: block.id -%}
+                  <a href="{{ video_link }}" 
+                    class="{{ block.settings.button_style }} {{ block.settings.button_color }} image__video__play" 
+                    data-aos="hero"
+                    data-aos-order="3"
+                    data-video-play="{%- render 'photoswipe-video-html' item_link: block.settings.video_link, item_id: video_parent_id -%}">
+                      &#8203;
+                      {% render 'icon-play' %}
+                  </a>
+                {%- endif -%}
+
+              </div>
+        
               {%- if block.settings.link != blank -%}
                 {%- unless block.settings.link_text != blank -%}
                   <a href="{{ block.settings.link }}" class="hero__content__link">&nbsp;</a>
                 {%- endunless -%}
               {%- endif -%}
             </div>
-
-            <div
-              class="image-overlay"
-              style="background-color:{{ block.settings.overlay_color }} !important; opacity:{{ overlay_opacity }};"
-            ></div>
-
-            {%- render 'image-background', img_object: block.settings.image, frame_height_class: section.settings.height, bg_position: block.settings.bg_position, bg_size: block.settings.bg_size, img_height: block.settings.img_height, -%}
+        
+            <div class="image-overlay" style="background-color:{{ block.settings.overlay_color }} !important; opacity:{{ overlay_opacity }};"></div>
+        
+            {%- render 'image-background', img_object: block.settings.image, frame_height_class: section.settings.height, bg_position: block.settings.bg_position, bg_size: block.settings.bg_size, img_height: block.settings.img_height,  -%}
           </div>
         </div>
       {% when 'text' %}
-        <style>
-          @media screen and (min-width: 550px){
-/*             #text-{{ block.id }} ul li,
-            #text-{{ block.id }} p, #text-{{ block.id }} ul {
-                font-size:{{block.settings.custom_font}}px;
-                color:{{block.settings.custom_color}};
-                font-weight:{{block.settings.custom_font_weight}};
-                line-height: 33px;
-                } */
-      .desktop-design-for-li ul li {
-      font-family: 'Mulish';
-      font-style: normal;
-      font-weight: 300;
-      font-size: 28px;
-      line-height: 33px;
-      color: #000000;
-      margin-bottom: 10px;
-      }
-      .ctm-style {
-       padding-inline: 0px;
-      }
-          }
-          @media screen and (max-width: 549px){
-            #text-{{ block.id }} ul li,
-            #text-{{ block.id }} p, #text-{{ block.id }} ul {
-                font-size:{{ block.settings.custom_font_mob }}px;
-                color:{{block.settings.custom_color}};
-                font-weight:{{block.settings.custom_font_weight}};
-                line-height: 24px;
-                }
-          }
-        </style>
-        <div
-          class="brick__block {% if template contains 'patients' %} ctm-text-block {% endif %}"
-          {{ block.shopify_attributes }}
-          style="background-color: {{ block.settings.bg_color | color_modify : "alpha" , block.settings.bg_opacity }}"
-        >
-          <div class="brick__block__text ctm-style {{ block.settings.text_color }}" data-overflow-frame>
-            <div class="brick__block__text__inner" style="align-self: {{ block.settings.align_self }}">
+        <div class="brick__block" {{ block.shopify_attributes }} style="background-color: {{ block.settings.bg_color }};">
+          <div class="brick__block__text {{ block.settings.text_color }}" data-overflow-frame >
+            <div class="brick__block__text__inner">
               <div class="text__standard {{ block.settings.align_text }}" data-overflow-content>
                 {% if block.settings.subheading != blank %}
-                  <p
-                    class="standard__subheading"
+                  <p class="standard__subheading"
                     data-aos="hero"
-                    data-aos-order="1"
-                  >
-                    {{ block.settings.subheading }}
-                  </p>
+                    data-aos-order="1">{{ block.settings.subheading }}</p>
                 {% endif %}
                 {% if block.settings.title != blank %}
-                  <h2
-                    class="h4 standard__heading heading-accent hide-on-mobile"
+                  <h2 class="h4 standard__heading heading-accent"
                     data-aos="hero"
-                    data-aos-order="2"
-                    style="font-size:{{ block.settings.title_font }}px;color:{{ block.settings.title_color }};"
-                  >
-                    {{ block.settings.title }}
-                  </h2>
+                    data-aos-order="2">{{ block.settings.title }}</h2>
                 {% endif %}
                 {% if block.settings.text != blank %}
                   {% assign font_size_class = block.settings.text_size | plus: 1 | prepend: 'font--' %}
                   {% assign text_columns_class = block.settings.text_columns | prepend: 'columns--' %}
-                  <div
-                    class="standard__rte {{ font_size_class }} {{ text_columns_class }} mobile-design-for-li desktop-design-for-li"
+                  <div class="standard__rte {{ font_size_class }} {{ text_columns_class }}"
                     data-aos="hero"
-                    data-aos-order="3"
-                    style="
-                      padding-top:{{ block.settings.text_padding_top }}px; padding-bottom:{{ block.settings.text_padding_bottom }}px;
-                      margin-left:{{ block.settings.text_margin_left }}px
-                    "
-                    id="text-{{ block.id }}"
-                  >
-                    {{ block.settings.text }}
-                  </div>
+                    data-aos-order="3">{{ block.settings.text }}</div>
+                {% endif %}
+                {% if block.settings.button_text != blank %}
+                  <a href="{{ block.settings.button_url }}" 
+                    class="standard__cta {{ block.settings.button_style }} {{ block.settings.button_color }}"
+                    data-aos="hero"
+                    data-aos-order="4">{{ block.settings.button_text }}</a>
                 {% endif %}
               </div>
             </div>
           </div>
         </div>
-      <style>
-    .ctm-style {
-      padding-inline: {{block.settings.ctm-padding-inline}}px;
-    }
-      </style>
       {% when 'newsletter' %}
         <div class="brick__block" {{ block.shopify_attributes }}>
-          <div
-            class="brick__block__text {{ block.settings.text_color }}"
-            data-overflow-frame
-            style="background-color: {{ block.settings.bg_color }};"
-          >
+          <div class="brick__block__text {{ block.settings.text_color }}" data-overflow-frame style="background-color: {{ block.settings.bg_color }};">
             <div class="brick__block__text__inner">
               <div class="text__standard {{ block.settings.align_text }}" data-overflow-content>
                 {% if block.settings.title != blank %}
-                  <p
-                    class="standard__subheading"
+                  <p class="standard__subheading"
                     data-aos="hero"
-                    data-aos-order="1"
-                  >
-                    {{ block.settings.title }}
-                  </p>
+                    data-aos-order="1">{{ block.settings.title }}</p>
                 {% endif %}
                 {% if block.settings.heading != blank %}
-                  <h2
-                    class="h4 standard__heading"
+                  <h2 class="h4 standard__heading"
                     data-aos="hero"
-                    data-aos-order="2"
-                  >
-                    {{ block.settings.heading }}
-                  </h2>
+                    data-aos-order="2">{{ block.settings.heading }}</h2>
                 {% endif %}
                 {% if block.settings.text != blank %}
                   {% assign font_size_class = block.settings.text_size | plus: 1 | prepend: 'font--' %}
                   {% assign text_columns_class = block.settings.text_columns | prepend: 'columns--' %}
-                  <div
-                    class="standard__rte {{ font_size_class }} {{ text_columns_class }}"
+                  <div class="standard__rte {{ font_size_class }} {{ text_columns_class }}"
                     data-aos="hero"
-                    data-aos-order="3"
-                  >
-                    {{ block.settings.text }}
-                  </div>
+                    data-aos-order="3">{{ block.settings.text }}</div>
                 {% endif %}
-                <div
-                  class="newsletter-signup"
+                <div class="newsletter-signup"
                   data-aos="hero"
-                  data-aos-order="4"
-                >
+                  data-aos-order="4">
                   {%- assign field_id = 'email_input' | append: block.id -%}
                   {%- assign button_id = 'subscribe' | append: block.id -%}
                   {%- assign form_id = 'contact-newsletter-' | append: block.id -%}
-                  {%- render 'newsletter-form',
-                    form_id: form_id,
-                    show_name: block.settings.enable_name,
-                    field_id: field_id,
-                    button_id: button_id
-                  -%}
+                  {%- render 'newsletter-form' form_id: form_id, show_name: block.settings.enable_name, field_id: field_id, button_id: button_id -%}
                 </div>
               </div>
             </div>
@@ -248,11 +187,7 @@
         {% assign subheading = block.settings.subheading %}
         {% assign review_url = block.settings.review_url %}
         <div class="brick__block" {{ block.shopify_attributes }}>
-          <div
-            class="brick__block__text {{ block.settings.text_color }}"
-            data-overflow-frame
-            style="background-color: {{ block.settings.bg_color }};"
-          >
+          <div class="brick__block__text {{ block.settings.text_color }}" data-overflow-frame style="background-color: {{ block.settings.bg_color }};">
             <div class="brick__block__text__inner">
               <div class="review__content {{ block.settings.align_text }}">
                 {% if review != blank %}
@@ -265,15 +200,9 @@
                 {% if customer_name != blank or review_url != blank or bio_image != blank %}
                   <div class="review__author {% if bio_image == blank %}review__author--no-bio-image{% endif %}">
                     {% if bio_image != blank %}
-                      <div
-                        class="review__author-bio-image lazyload"
-                        data-bgset="{% render 'bgset', image: bio_image %}"
-                      ></div>
+                      <div class="review__author-bio-image lazyload" data-bgset="{% render 'bgset', image: bio_image %}"></div>
                       <noscript>
-                        <div
-                          class="review__author-bio-image no-js-image"
-                          style="background-image: url( {{ bio_image | img_url: '1024x' }} )"
-                        ></div>
+                        <div class="review__author-bio-image no-js-image" style="background-image: url( {{ bio_image | img_url: '1024x' }} )"></div>
                       </noscript>
                     {% endif %}
                     {% if customer_name != blank %}
@@ -296,30 +225,16 @@
             </div>
           </div>
         </div>
-      {% when 'ctm-divider' %}
-        <div class="ctm-divider-wrapper">
-          <div class="brick__block__text ctm-divider-style"></div>
-          <div class="brick__block__text ctm-footer-note-style ">
-            {{ block.settings['footer-note'] }}
-          </div>
-        </div>
       {% when 'product' %}
+
         <div class="brick__block" {{ block.shopify_attributes }}>
-          <div
-            class="brick__block__text {{ block.settings.text_color }}"
-            data-overflow-frame
-            style="background-color: {{ block.settings.bg_color }};"
-          >
+          <div class="brick__block__text {{ block.settings.text_color }}" data-overflow-frame style="background-color: {{ block.settings.bg_color }};">
             <div class="brick__block__text__inner">
               <div class="text-center" data-overflow-content>
                 {% if block.settings.title != blank %}
-                  <p
-                    class="brick__product__subheading"
+                  <p class="brick__product__subheading"
                     data-aos="hero"
-                    data-aos-order="1"
-                  >
-                    {{ block.settings.title }}
-                  </p>
+                    data-aos-order="1">{{block.settings.title}}</p>
                 {% endif %}
                 <div class="brick__product">
                   {%- assign product = all_products[block.settings.product] -%}
@@ -334,38 +249,17 @@
           </div>
         </div>
       {% else %}
-
     {% endcase %}
   {% endfor %}
   {% if section.blocks.size == 0 %}
     {% render 'no-blocks' %}
   {% endif %}
 </section>
-<style>
-  @media (max-width: 540px) {
-    .ctm-section-05 {
-      display: none;
-    }
-    .hide-on-mobile {
-      display: none;
-    }
-    .mobile-design-for-li, .mobile-design-for-li li{
-      font-family: 'Mulish';
-      font-style: normal;
-/*       font-weight: 300; */
-      font-size: 18px;
-      line-height: 24px;
-      margin-bottom: 13px;
-      margin-left: unset !important;
-      padding-top: unset !important;
-    }
 
-  }
-</style>
 {% schema %}
 {
-  "name": "Orignal Image with text",
-  "max_blocks": 4,
+  "name": "Image with text",
+  "max_blocks": 2,
   "settings": [
   {
     "type": "select",
@@ -393,12 +287,12 @@
   },
     {
       "type":"number",
-      "id":"text_padding_top",
+      "id":"padding-top",
       "label":"Padding Top"
     },
     {
       "type":"number",
-      "id":"text_padding_left",
+      "id":"padding-bottom",
       "label":"Padding Bottom"
     },
   {
@@ -415,18 +309,6 @@
   }
 ],
 "blocks": [
-    {
-      "type":  "ctm-divider",
-      "name": "image_with_text_divide",
-      "settings": [
-        {
-          "type": "liquid",
-          "id": "footer-note",
-          "label": "Footer note",
-          "default": "<p>*** Note</p>"
-        }
-      ]
-    },
     {
       "type": "image",
       "name": "Image",
@@ -606,111 +488,11 @@
         "label": "Heading",
         "default": "Text block"
       },
-           {
-      "type":"range",
-      "id":"title_font",
-      "label":"Title Font Size",
-      "min":0,
-      "max":40,
-      "step":1,
-      "unit":"px",
-      "default":34
-    },
-    {
-      "type":"color",
-      "id" :"title_color",
-      "label":"Title Color",
-      "default":"#FFFFFF"
-    },
       {
         "type": "richtext",
         "id": "text",
         "label": "Text",
         "default": "<p>Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.</p>"
-      },
-      {
-       "type":"select",
-       "id":"custom_font_weight",
-       "label":"Text Font Weight",
-       "options":[
-         {"label":"300","value":"300"},
-         {"label":"400","value":"400"},
-         {"label":"500","value":"500"},
-         {"label":"600","value":"600"},
-         {"label":"700","value":"700"}
-       ],
-        "default":"400"
-       },
-        {
-        "type":"color",
-        "id":"custom_color",
-        "label":"Text Color",
-        "default":"#000000"
-        },
-         {
-      "type":"range",
-      "id":"custom_font",
-      "label":"Text Font Size",
-      "min":0,
-      "max":40,
-      "step":1,
-      "unit":"px",
-      "default": 28
-       },
-      {
-      "type":"range",
-      "id":"custom_font_mob",
-      "label":"Text Font Size mobile",
-      "min":0,
-      "max":40,
-      "step":1,
-      "unit":"px",
-      "default":18
-       },
-      {
-        "type": "number",
-        "id": "ctm-padding-inline",
-        "label": "Padding Inline"
-      },
-      {
-	"type": "select",
-	"id": "align_self",
-	"label": "Vertical Align",
-	"options": [{
-			"value": "flex-start",
-			"label": "Start"
-		},
-		{
-			"value": "center",
-			"label": "Center"
-		},
-		{
-			"value": "flex-end",
-			"label": "End"
-		},
-		{
-			"value": "stretch",
-			"label": "Stretch"
-		}
-	]
-},
-      {
-        "type":"number",
-        "id":"text_padding_top",
-        "label": "Text Padding Top",
-        "default":5
-      },
-      {
-      "type":"number",
-      "id":"text_padding_bottom",
-      "label":"Text Padding Bottom",
-        "default":5
-    },
-      {
-        "type":"number",
-        "id":"text_margin_left",
-        "label": "Text Margin Left",
-        "default":0
       },
       {
         "type":  "range",
@@ -760,15 +542,6 @@
         "id": "bg_color",
         "label": "Background",
         "default": "#ffffff"
-      },
-      {
-        "type":  "range",
-        "id":    "bg_opacity",
-        "label": "Background Opacity",
-        "min":    0,
-        "max":    1,
-        "step":   0.1,
-        "default":1
       },
       {
         "type": "header",
@@ -1022,7 +795,7 @@
 ],
   "presets": [
     {
-      "name": "Section 05 image with text",
+      "name": "Image with text",
       "category": "Image",
       "blocks": [
         {

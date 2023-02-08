@@ -12,9 +12,6 @@
   .logos__slider-inner{
     align-items: baseline !important;
   }
-  #shopify-section-template--{{section.id}} .ctm-style-logo-list-heading {
-    margin-block: 50px;
-  }
 </style>
 
 <div class="logos logos--{{ section.id }} {{ section.settings.text_color }} {% if page.url contains 'patients' %} ctm-logo-list-wrapper {% endif %}" data-section-id="{{ section.id }}" data-section-type="logos">
@@ -28,7 +25,7 @@
 
 
       {% if section.settings.subheading_patientPage != blank %}
-          <p class="subheading-logolist ctm-subheading-logolist">{{ section.settings.subheading_patientPage }} </p>
+          <p class="subheading-logolist">{{ section.settings.subheading_patientPage }} </p>
       {% endif %}
           {%endif%}
       <div class="logos__slider ctm-logos__slider">
@@ -50,7 +47,7 @@
                     data-parent-fit="cover"
                     data-aspectratio="{{ logo.aspect_ratio }}">
                   </div>
-                  <h3 class="ctm-logo-card-title" style="font-size: 20px;">{{ block.settings.title }}</h3>
+                  <h3 class="ctm-logo-card-title" style="font-size: 16px;">{{ block.settings.title }}</h3>
                   <span class="ctm-logo-list-description" style="font-size: 14px;width:200px;display:inline-block">{{ block.settings.description }}</span>
                 
                   <noscript>
@@ -93,6 +90,10 @@
           
       <div class="ctm-divider-style-wrapper">
         <div class="brick__block__text ctm-footer-note-border"></div>
+    {% comment %}    <div class="brick__block__text ctm-footer-note-style ">
+          {{ section.settings.footer-note-content-2 }} 
+        </div>
+   {% endcomment %}
           {{ section.settings.footer-note-content }}
       </div>
       

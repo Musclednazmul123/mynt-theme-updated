@@ -145,16 +145,15 @@
               
               <div class="product__price__wrap" style="display: {{ on_off }} !important;">
                 <div class="product__price" data-price-wrapper>
-                  <h4 data-product-price  style='display: none; opacity: 0;'{% if current_variant.compare_at_price > current_variant.price %} class="product__price--sale"{% endif %}>
-<!--                     <span> {{ current_variant.price | money_with_currency }}</span> -->
+                  <h4 data-product-price {% if current_variant.compare_at_price > current_variant.price %} class="product__price--sale"{% endif %}>
+                    {{ current_variant.price | money }}
                   </h4>
-                  <h4> {{ current_variant.price | money_with_currency }}</h4>
 
                   {% if product.compare_at_price_max > product.price %}
                     <span class="visually-hidden" data-compare-text>{{ 'products.product.regular_price' | t }}</span>
                     <s class="product__price--strike" data-compare-price>
                       {% if current_variant.compare_at_price > current_variant.price %}
-                        {{ current_variant.compare_at_price | money_with_currency }}
+                        {{ current_variant.compare_at_price | money }}
                       {% endif %}
                     </s>
                   {% endif %}
@@ -184,11 +183,10 @@
                         {% endif %}
                       </span>
                     {% endcapture %}
-                    
                     <div class="product__price__meta">
                       <span data-product-unit {{ show_units }} class="product__price--unit">
                         <span class="visually-hidden visually-hidden--inline">{{ 'products.product.unit_price_label' | t }}</span>
-                        <span data-product-unit-price id="unit-price-{{ section.id }}">{{ current_variant.unit_price | money_with_currency }}</span>
+                        <span data-product-unit-price id="unit-price-{{ section.id }}">{{ current_variant.unit_price | money }}</span>
                         {{ unit_price_separator }}
                         <span data-product-base id="unit-price-base-{{ section.id }}">{{ unit_price_base_unit }}</span>
                       </span>
@@ -217,9 +215,10 @@
               {% assign hide_labels_class = 'variant__labels--hide' -%}
             {%- endif -%}
 
-
             <div data-product-form class="product__form  {{ hide_labels_class }}">
+                
               {% render 'product-form', product: product, section: section, unique: unique %}
+             
             </div>
 
             {% if template.name == 'product' %}
@@ -292,10 +291,10 @@
             {%- endunless -%}
   
             <p class="product-upsell__price small {% if upsell_variant.compare_at_price > upsell_variant.price %} sale{% endif %}">
-              <span class="new-price">{{ upsell_variant.price | money_with_currency }}</span>  
+              <span class="new-price">{{ upsell_variant.price | money }}</span>  
               
               {%- if upsell_variant.compare_at_price > upsell_variant.price -%}
-                <span class="old-price">{{ upsell_variant.compare_at_price | money_with_currency }}</span>
+                <span class="old-price">{{ upsell_variant.compare_at_price | money }}</span>
               {%- endif -%}
               
               {%- if upsell_variant.unit_price -%}
@@ -315,7 +314,7 @@
   
                 <span class="visually-hidden visually-hidden--inline">{{ 'products.product.unit_price_label' | t }}</span>
   
-                <span class="unit">{{ upsell_variant.unit_price | money_with_currency }}{{ unit_price_separator }}{{ unit_price_base_unit }}</span>
+                <span class="unit">{{ upsell_variant.unit_price | money }}{{ unit_price_separator }}{{ unit_price_base_unit }}</span>
               {% endif -%}
             </p>  
           </a>
@@ -348,8 +347,6 @@
     </div>
   </div>
 {%- endif -%}
-
-                  
 
             {% endif %}
 

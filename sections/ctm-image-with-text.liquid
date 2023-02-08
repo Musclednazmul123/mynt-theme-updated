@@ -56,38 +56,80 @@
           endif
           assign overlay_opacity = block.settings.overlay_opacity | times: 0.01
         -%}
-  
-        <div class="brick__block {% if template contains 'patients' %} ctm-image-block desktop-image-ctm{% endif %}" data-overflow-frame {{ block.shopify_attributes }}>
+        <div class="brick__block {% if template contains 'patients' %} ctm-image-block {% endif %}" data-overflow-frame {{ block.shopify_attributes }}>
           <div class="brick__block__image wide-image js-overflow-container {{ block.settings.text_color }}">
+            <div class="hero__content__wrapper {{ block.settings.flex_align }} {{ transparency_class }}">
+              <div class="hero__content" data-overflow-content>
+                {%- unless block.settings.title == '' -%}
+                  <h1 class="hero__title"
+                    data-aos="hero"
+                    data-aos-order="1">{{ block.settings.title | escape }}</h1>
+                {%- endunless -%}
+        
+                {%- unless block.settings.description == '' -%}
+                  <p class="hero__description h5--body"
+                    data-aos="hero"
+                    data-aos-order="2">
+                    {{ block.settings.description }}
+                  </p>
+                {%- endunless -%}
+        
+                {%- if block.settings.link_text != '' and block.settings.video_link == blank -%}
+                  <a class="{{ block.settings.button_style }} {{ block.settings.button_color }}"
+                    href="{{ block.settings.link }}"
+                    data-aos="hero"
+                    data-aos-order="3">
+                    {{ block.settings.link_text | escape }}
+                  </a>
+                {%- endif -%}
+
+
+                {%- if block.settings.video_link != blank -%}
+                  {%- if block.settings.video_link.type == 'youtube' -%}
+                    {% capture video_link %}https://www.youtube.com/watch?v={{ block.settings.video_link.id }}{% endcapture %}
+                  {%- elsif block.settings.video_link.type == 'vimeo' -%}
+                    {% capture video_link %}https://vimeo.com/{{ block.settings.video_link.id }}{% endcapture %}
+                  {%- endif -%}
+                  {%- assign video_parent_id = 'item-video-' | append: block.id -%}
+                  <a href="{{ video_link }}" 
+                    class="{{ block.settings.button_style }} {{ block.settings.button_color }} image__video__play" 
+                    data-aos="hero"
+                    data-aos-order="3"
+                    data-video-play="{%- render 'photoswipe-video-html' item_link: block.settings.video_link, item_id: video_parent_id -%}">
+                      &#8203;
+                      {% render 'icon-play' %}
+                  </a>
+                {%- endif -%}
+
+              </div>
+        
+              {%- if block.settings.link != blank -%}
+                {%- unless block.settings.link_text != blank -%}
+                  <a href="{{ block.settings.link }}" class="hero__content__link">&nbsp;</a>
+                {%- endunless -%}
+              {%- endif -%}
+            </div>
+        
+            <div class="image-overlay" style="background-color:{{ block.settings.overlay_color }} !important; opacity:{{ overlay_opacity }};"></div>
+        
             {%- render 'ctm-image-responsive', img_object: block.settings.image, frame_height_class: section.settings.height, bg_position: block.settings.bg_position, bg_size: block.settings.bg_size, img_height: block.settings.img_height,  -%}
           </div>
         </div>
-     
       {% when 'text' %}
         <div class="brick__block {% if template contains 'patients' %} ctm-text-block {% endif %}" {{ block.shopify_attributes }} style="background-color: {{ block.settings.bg_color }};">
           <div class="brick__block__text {{ block.settings.text_color }} ctm-iwt-style-text-relative-wrapper" data-overflow-frame >
             <div class="brick__block__text__inner ctm-iwt-style-text-relative">
               <div class="text__standard {{ block.settings.align_text }} ctm-iwt-text-wrapper" data-overflow-content>
-
+                {% if block.settings.subheading != blank %}
+                  <p class="standard__subheading"
+                    data-aos="hero"
+                    data-aos-order="1">{{ block.settings.subheading }}</p>
+                {% endif %}
                 {% if block.settings.title != blank %}
                   <h2 class="h4 standard__heading heading-accent ctm-iwt-text-heading"
                     data-aos="hero"
                     data-aos-order="2">{{ block.settings.title }}</h2>
                 {% endif %}
-                        {% liquid
-          assign transparency_class = ''
-          if block.settings.transparent
-            assign transparency_class = 'hero__content--transparent'
-          endif
-          assign overlay_opacity = block.settings.overlay_opacity | times: 0.01
-        -%}
-      <div class="mobile-image-ctm" style="margin-top: 30px;">
-        <div class="brick__block {% if template contains 'patients' %} ctm-image-block {% endif %}" data-overflow-frame {{ block.shopify_attributes }}>
-          <div class="brick__block__image wide-image js-overflow-container {{ block.settings.text_color }}">
-            {%- render 'ctm-image-responsive', img_object: block.settings.image, frame_height_class: section.settings.height, bg_position: block.settings.bg_position, bg_size: block.settings.bg_size, img_height: block.settings.img_height,  -%}
-          </div>
-        </div>
-      </div>
                 {% if block.settings.text != blank %}
                   {% assign font_size_class = block.settings.text_size | plus: 1 | prepend: 'font--' %}
                   {% assign text_columns_class = block.settings.text_columns | prepend: 'columns--' %}
@@ -95,13 +137,18 @@
                     data-aos="hero"
                     data-aos-order="3">{{ block.settings.text }}</div>
                 {% endif %}
- 
+                {% if block.settings.button_text != blank %}
+                  <a href="{{ block.settings.button_url }}" 
+                    class="standard__cta {{ block.settings.button_style }} {{ block.settings.button_color }}"
+                    data-aos="hero"
+                    data-aos-order="4">{{ block.settings.button_text }}</a>
+                {% endif %}
               </div>
             </div>
             {% if section.settings.footerNote %}
                   <div class="ctm-divider-wrapper-new">
         <div class="brick__block__text ctm-divider-style-new" style="margin-left: 0px;"></div>
-        <div class="brick__block__text ctm-footer-note-style-new " style="padding-block:5px; padding-inline: 0px;">
+        <div class="brick__block__text ctm-footer-note-style-new " style="padding-block:20px; padding-inline: 0px;">
           {{ section.settings.footer-note }}
         </div>
       </div>
@@ -109,9 +156,7 @@
               .ctm-footer-note-style-new p {
                 margin: 0px;
                 padding: 0px;
-                font-size: 10px;
-                font-weight: 700px;
-                max-width: 370px;
+                font-size: 12px;
               }
               .ctm-divider-style-new {
                 width: 200px;
@@ -123,6 +168,13 @@
               {% endif %}
           </div>
         </div>
+      {% when 'ctm-divider' %}
+      <div class="ctm-divider-wrapper">
+        <div class="brick__block__text ctm-divider-style"></div>
+        <div class="brick__block__text ctm-footer-note-style ">
+          {{ block.settings.footer-note }}
+        </div>
+      </div>
       {% else %}
     {% endcase %}
   {% endfor %}
@@ -232,8 +284,131 @@
           "type":"number",
           "id":"img_height",
           "label":"Height %"
+        },
+        {
+          "type": "header",
+          "content": "Overlay"
+        },
+        {
+          "type": "range",
+          "id": "overlay_opacity",
+          "label": "Opacity",
+          "info": "Increase contrast for legible text.",
+          "min": 0,
+          "max": 100,
+          "step": 5,
+          "unit": "%",
+          "default":0
+        },
+        {
+          "type": "color",
+          "id": "overlay_color",
+          "label": "Overlay color",
+          "default": "#000"
+        },
+        {
+          "type": "header",
+          "content": "Text"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading",
+          "default": "Image with text"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Subheading",
+          "default": "Tell your brand's story through images."
+        },
+        {
+          "type": "select",
+          "id": "flex_align",
+          "label": "Block alignment",
+          "default": "align--middle-center",
+          "options": [
+            { "value": "align--top-left", "label": "Top left"},
+            { "value": "align--top-center", "label": "Top center"},
+            { "value": "align--top-right", "label": "Top right"},
+            { "value": "align--middle-left", "label": "Middle left"},
+            { "value": "align--middle-center", "label": "Absolute center"},
+            { "value": "align--middle-right", "label": "Middle right"},
+            { "value": "align--bottom-left", "label": "Bottom left"},
+            { "value": "align--bottom-center", "label": "Bottom center"},
+            { "value": "align--bottom-right", "label": "Bottom right"}
+          ]
+        },
+        {
+          "type": "select",
+          "id": "text_color",
+          "label": "Text color",
+          "default": "text-light",
+          "options": [
+            { "value": "text-light", "label": "White"},
+            { "value": "text-dark", "label": "Dark"}
+          ]
+        },
+        {
+          "type": "checkbox",
+          "id": "transparent",
+          "label": "Transparent background",
+          "default": true
+        },
+        {
+          "type": "header",
+          "content": "Button"
+        },
+        {
+          "type": "text",
+          "id": "link_text",
+          "label": "Text",
+          "default": "View products",
+          "info": "Leave blank to link entire image"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        },
+        {
+          "type": "select",
+          "id": "button_color",
+          "label": "Color",
+          "default": "btn--white",
+          "options": [
+            {"value": "btn--primary", "label": "Bright accent"},
+            {"value": "btn--secondary", "label": "Secondary accent"},
+            {"value": "btn--link", "label": "Link color"},
+            {"value": "btn--neutral", "label": "Text color"},
+            {"value": "btn--black", "label": "Black"},
+            {"value": "btn--white", "label": "White"}
+          ]
+        },
+        {
+          "type": "select",
+          "id": "button_style",
+          "label": "Style",
+          "default": "hero__btn btn btn--large btn--outline caps",
+          "options": [
+            {"value": "caps--large", "label": "Capitalized text"},
+            {"value": "hero__btn btn btn--input caps", "label": "Small button"},
+            {"value": "hero__btn btn btn--large caps", "label": "Large button"},
+            {"value": "hero__btn btn btn--input btn--outline caps", "label": "Small outline button"},
+            {"value": "hero__btn btn btn--large btn--outline caps", "label": "Large outline button"}
+          ]
+        },
+        {
+          "type": "header",
+          "content": "Video popup (optional)"
+        },
+        {
+          "type": "video_url",
+          "id": "video_link",
+          "label": "Video link",
+          "accept": ["youtube", "vimeo"],
+          "info": "Video links from YouTube or Vimeo accepted."
         }
-        
       ]
     },
     {
@@ -348,40 +523,7 @@
           {"value": "hero__btn btn btn--input btn--outline caps", "label": "Small outline button"},
           {"value": "hero__btn btn btn--large btn--outline caps", "label": "Large outline button"}
         ]
-      },
-        {
-          "type": "image_picker",
-          "id": "image",
-          "label": "Image"
-        },
-        {
-          "type": "select",
-          "id": "bg_position",
-          "label": "Position",
-          "default": "center-center",
-          "options": [
-            { "label": "Top", "value": "center-top" },
-            { "label": "Right", "value": "right-center" },
-            { "label": "Center", "value": "center-center" },
-            { "label": "Left", "value": "left-center" },
-            { "label": "Bottom", "value": "center-bottom" }
-          ]
-        },
-        {
-          "type": "select",
-          "id": "bg_size",
-          "label": "Background Size",
-          "default": "cover",
-          "options": [
-            { "label": "Cover", "value": "cover" },
-            { "label": "Contain", "value": "contain" }
-          ]
-        },
-        {
-          "type":"number",
-          "id":"img_height",
-          "label":"Height %"
-        }
+      }
     ]
   }
 ],

@@ -7,13 +7,14 @@
 
 {% assign show_reviews = false %}
 
+
 {%- if settings.enable_yotpo and settings.yotpo_ID != '' -%}
   {% assign show_reviews = true %}
 {%- elsif settings.enable_product_reviews -%}
   {% assign show_reviews = true %}
 {%- endif -%}
-
-{% capture var %}{% render 'locksmith-variables', variable: 'access_granted', scope: 'subject', subject: product %}{% endcapture %}{% if var == 'true' %}{% assign locksmith_access_granted = true %}{% else %}{% assign locksmith_access_granted = false %}{% endif %}
+{% capture var %}{% render 'locksmith-variables', variable: 'access_granted', scope: 'subject', subject: product %}{% endcapture %}
+{% if var == 'true' %}{% assign locksmith_access_granted = true %}{% else %}{% assign locksmith_access_granted = false %}{% endif %}
 
 {% assign ProductInCart = flase %}
 {% for item in cart.items %}
@@ -22,7 +23,7 @@
     {% endif %} 
 {% endfor %}
 
-<!-- <a href="/" id="pdf_download_001">download Pdf</a> -->
+ 
 
 <div id="template-product"
      data-section-id="{{ section.id }}"
@@ -35,6 +36,7 @@
      data-cart-bar="{{ show_cart_bar }}"
      data-image-zoom-enable="{{ section.settings.enable_zoom }}"
      data-video-looping="{{ section.settings.enable_video_looping }}">
+
   {%- render 'product' product: product, section: section, unique: section.id -%}
 
   {%- if show_cart_bar -%}
@@ -79,14 +81,14 @@
 
       <div class="h5--body cart-bar__product__price product__price" data-price-wrapper>
         <span data-product-price {% if current_variant.compare_at_price > current_variant.price %} class="product__price--sale"{% endif %}>
-          {{ current_variant.price | money_with_currency}}
+          {{ current_variant.price | money }}
         </span>
 
         {% if product.compare_at_price_max > product.price %}
-          <span class="visually-hidden" data-compare-text>{{ 'products.product.regular_price' | money_with_currency }}</span>
+          <span class="visually-hidden" data-compare-text>{{ 'products.product.regular_price' | t }}</span>
           <s class="product__price--strike" data-compare-price>
             {% if current_variant.compare_at_price > current_variant.price %}
-              {{ current_variant.compare_at_price | money_with_currency }}
+              {{ current_variant.compare_at_price | money }}
             {% endif %}
           </s>
         {% endif %}
@@ -102,34 +104,11 @@
   {%- render 'products-recently-viewed', product: product, heading_title: section.settings.product_recently_heading -%}
 {%- endif -%}
 
-{%- assign cart_size = cart.items | size  -%}
+<button onclick='addpasscode()'> click me</button>
 
- {% if locksmith_access_granted %}
-    {% if ProductInCart %}
-
-      {% elsif cart_size > 0 %}
-
-      {% else %}
-      {% if product.available %}
-<!--       <div class="loading">
+      <script type="text/javascript" src='{{ 'custom-order-note.js' | asset_url }}'>
         
-      </div> -->
-        {% endif %}
-
-<!--       <script>
-       // alert("testing");
-        window.onload = (event) => {
-         let passcode=document.getElementById("add-to-cart-button")
-          if (passcode != null){
-            passcode.click() 
-          }
-            let x = document.cookie;
-          console.log(x)
-        }
-
-      </script> -->
-      {% endif %}
-  {% endif %}
+      </script>
 
 {% schema %}
   {
